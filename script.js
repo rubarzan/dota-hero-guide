@@ -19,9 +19,19 @@ const attributeNames = {
 
 const heroGuides = {
     "Phantom Assassin": {
-        about: `
-            this hero has evation.
-        `,
+        about: {
+            strengths: [
+                "مورد اول",
+                "مورد دوم",
+                "مورد سوم"
+            ],
+
+            weaknesses: [
+                "مورد اول",
+                "مورد دوم",
+                "مورد سوم"
+            ]
+        },
 
         against: `
             نحوه بازی کردن مقابل Phantom Assassin را اینجا وارد کن.
@@ -121,6 +131,9 @@ function showHeroGuide(hero) {
     const imageUrl =
         `https://cdn.cloudflare.steamstatic.com${hero.img}`;
 
+    const strengths = guideData?.about?.strengths || [];
+    const weaknesses = guideData?.about?.weaknesses || [];
+
     content.innerHTML = `
         <div class="guide-header">
             <img
@@ -133,9 +146,34 @@ function showHeroGuide(hero) {
 
         <div class="guide-section">
             <h3>About This Hero</h3>
-            <p>
-                ${guideData?.about || "Guide content will be added here."}
-            </p>
+
+            <div class="pros-cons">
+
+                <div class="pros-cons-column">
+                    <h4>Strengths & Mechanics</h4>
+
+                    <ul>
+                        ${
+                            strengths.length > 0
+                                ? strengths.map(item => `<li>${item}</li>`).join("")
+                                : "<li>Guide content will be added here.</li>"
+                        }
+                    </ul>
+                </div>
+
+                <div class="pros-cons-column">
+                    <h4>Weaknesses & Limitations</h4>
+
+                    <ul>
+                        ${
+                            weaknesses.length > 0
+                                ? weaknesses.map(item => `<li>${item}</li>`).join("")
+                                : "<li>Guide content will be added here.</li>"
+                        }
+                    </ul>
+                </div>
+
+            </div>
         </div>
 
         <div class="guide-section">
