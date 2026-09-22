@@ -1,9 +1,3 @@
-const selectedHeroes = [
-    "Necrophos",
-    "Axe",
-    "Faceless Void"
-];
-
 async function loadHeroes() {
     const heroGrid = document.getElementById("hero-grid");
 
@@ -11,16 +5,7 @@ async function loadHeroes() {
         const response = await fetch("https://api.opendota.com/api/heroStats");
         const heroes = await response.json();
 
-        selectedHeroes.forEach(heroName => {
-            const hero = heroes.find(
-                h => h.localized_name === heroName
-            );
-
-            if (!hero) {
-                console.error("Hero not found:", heroName);
-                return;
-            }
-
+        heroes.forEach(hero => {
             const card = document.createElement("div");
             card.className = "hero-card";
 
