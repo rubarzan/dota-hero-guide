@@ -21,15 +21,17 @@ const heroGuides = {
     "Phantom Assassin": {
         about: {
             strengths: [
-                "مورد اول",
-                "مورد دوم",
-                "مورد سوم"
+                "Evation",
+                "Biggest Crit Multiplierr in the Game",
+                "High Mobility"
+                "Long Range"
             ],
 
             weaknesses: [
-                "مورد اول",
-                "مورد دوم",
-                "مورد سوم"
+                "Only Physical Damage",
+                "Low Base HP",
+                "Reliant on BKB"
+                "Weak against Magic"
             ]
         },
 
