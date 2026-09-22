@@ -13,7 +13,7 @@ const attributeNames = {
 };
 
 async function loadHeroes() {
-    const main = document.querySelector("main");
+    const heroSelection = document.getElementById("hero-selection");
 
     try {
         const response = await fetch("https://api.opendota.com/api/heroStats");
@@ -23,9 +23,7 @@ async function loadHeroes() {
             const attributeHeroes = heroes
                 .filter(hero => hero.primary_attr === attribute)
                 .sort((a, b) =>
-                    a.localized_name.localeCompare(
-                        b.localized_name
-                    )
+                    a.localized_name.localeCompare(b.localized_name)
                 );
 
             if (attributeHeroes.length === 0) {
@@ -52,22 +50,89 @@ async function loadHeroes() {
                         src="https://cdn.cloudflare.steamstatic.com${hero.img}"
                         alt="${hero.localized_name}"
                     >
+
                     <div class="hero-name">
                         ${hero.localized_name}
                     </div>
                 `;
+
+                card.addEventListener("click", () => {
+                    showHeroGuide(hero);
+                });
 
                 grid.appendChild(card);
             });
 
             section.appendChild(title);
             section.appendChild(grid);
-            main.appendChild(section);
+            heroSelection.appendChild(section);
         });
 
     } catch (error) {
         console.error("Could not load heroes:", error);
     }
 }
+
+
+function showHeroGuide(hero) {
+    const guide = document.getElementById("hero-guide");
+    const content = document.getElementById("guide-content");
+
+    const imageUrl =
+        `https://cdn.cloudflare.steamstatic.com${hero.img}`;
+
+    content.innerHTML = `
+        <div class="guide-header">
+            <img
+                src="${imageUrl}"
+                alt="${hero.localized_name}"
+            >
+
+            <h2>${hero.localized_name}</h2>
+        </div>
+
+        <div class="guide-section">
+            <h3>About This Hero</h3>
+            <p>
+                Guide content for ${hero.localized_name} will be added here.
+            </p>
+        </div>
+
+        <div class="guide-section">
+            <h3>How to Play Against This Hero</h3>
+            <p>
+                Guide content will be added here.
+            </p>
+        </div>
+
+        <div class="guide-section">
+            <h3>How to Play Alongside This Hero</h3>
+            <p>
+                Guide content will be added here.
+            </p>
+        </div>
+
+        <div class="guide-section">
+            <h3>What to Pick Against This Hero</h3>
+            <p>
+                Guide content will be added here.
+            </p>
+        </div>
+
+        <div class="guide-section">
+            <h3>What to Pick Alongside This Hero</h3>
+            <p>
+                Guide content will be added here.
+            </p>
+        </div>
+    `;
+
+    guide.style.display = "block";
+
+    guide.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
 
 loadHeroes();
