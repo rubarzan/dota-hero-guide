@@ -12,6 +12,40 @@ const attributeNames = {
     all: "Universal"
 };
 
+
+/* =========================
+   HERO GUIDES
+   ========================= */
+
+const heroGuides = {
+    "Phantom Assassin": {
+        about: `
+            this hero has evation.
+        `,
+
+        against: `
+            نحوه بازی کردن مقابل Phantom Assassin را اینجا وارد کن.
+        `,
+
+        alongside: `
+            نحوه بازی کردن در کنار Phantom Assassin را اینجا وارد کن.
+        `,
+
+        counterPicks: `
+            هیروهای مناسب برای مقابله با Phantom Assassin را اینجا وارد کن.
+        `,
+
+        synergyPicks: `
+            هیروهای مناسب برای بازی در کنار Phantom Assassin را اینجا وارد کن.
+        `
+    }
+};
+
+
+/* =========================
+   LOAD HEROES
+   ========================= */
+
 async function loadHeroes() {
     const heroSelection = document.getElementById("hero-selection");
 
@@ -74,9 +108,15 @@ async function loadHeroes() {
 }
 
 
+/* =========================
+   SHOW HERO GUIDE
+   ========================= */
+
 function showHeroGuide(hero) {
     const guide = document.getElementById("hero-guide");
     const content = document.getElementById("guide-content");
+
+    const guideData = heroGuides[hero.localized_name];
 
     const imageUrl =
         `https://cdn.cloudflare.steamstatic.com${hero.img}`;
@@ -94,35 +134,35 @@ function showHeroGuide(hero) {
         <div class="guide-section">
             <h3>About This Hero</h3>
             <p>
-                Guide content for ${hero.localized_name} will be added here.
+                ${guideData?.about || "Guide content will be added here."}
             </p>
         </div>
 
         <div class="guide-section">
             <h3>How to Play Against This Hero</h3>
             <p>
-                Guide content will be added here.
+                ${guideData?.against || "Guide content will be added here."}
             </p>
         </div>
 
         <div class="guide-section">
             <h3>How to Play Alongside This Hero</h3>
             <p>
-                Guide content will be added here.
+                ${guideData?.alongside || "Guide content will be added here."}
             </p>
         </div>
 
         <div class="guide-section">
             <h3>What to Pick Against This Hero</h3>
             <p>
-                Guide content will be added here.
+                ${guideData?.counterPicks || "Guide content will be added here."}
             </p>
         </div>
 
         <div class="guide-section">
             <h3>What to Pick Alongside This Hero</h3>
             <p>
-                Guide content will be added here.
+                ${guideData?.synergyPicks || "Guide content will be added here."}
             </p>
         </div>
     `;
@@ -134,5 +174,9 @@ function showHeroGuide(hero) {
     });
 }
 
+
+/* =========================
+   START
+   ========================= */
 
 loadHeroes();
