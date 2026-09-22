@@ -5,10 +5,76 @@ body {
     font-family: Arial, sans-serif;
 }
 
-h1 {
+header {
+    text-align: center;
+    padding: 50px 20px 30px;
+}
+
+header h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 42px;
+}
+
+header p {
+    color: #999999;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.hero-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+    border: 1px solid #333333;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.hero-card:hover {
+    transform: translateY(-5px);
+    border-color: #777777;
+}
+
+.hero-image {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-card h2 {
+    margin: 20px 10px;
     color: #ffffff;
 }
 
-p {
-    color: #bdbdbd;
+.hero-card button {
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.hero-card button:hover {
+    background-color: #555555;
+}
+
+@media (max-width: 800px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
 }
