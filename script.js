@@ -2,14 +2,14 @@ const attributeOrder = [
     "str",
     "agi",
     "int",
-    "universal"
+    "all"
 ];
 
 const attributeNames = {
     str: "Strength",
     agi: "Agility",
     int: "Intelligence",
-    universal: "Universal"
+    all: "Universal"
 };
 
 async function loadHeroes() {
@@ -52,10 +52,9 @@ async function loadHeroes() {
                         src="https://cdn.cloudflare.steamstatic.com${hero.img}"
                         alt="${hero.localized_name}"
                     >
-
-                    <h2>${hero.localized_name}</h2>
-
-                    <button>View Guide</button>
+                    <div class="hero-name">
+                        ${hero.localized_name}
+                    </div>
                 `;
 
                 grid.appendChild(card);
