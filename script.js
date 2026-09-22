@@ -1,29 +1,46 @@
-const heroes = [
+const selectedHeroes = [
     "Necrophos",
     "Axe",
     "Faceless Void"
 ];
 
 async function loadHeroes() {
+    const heroGrid = document.getElementById("hero-grid");
+
     try {
         const response = await fetch("https://api.opendota.com/api/heroStats");
-        const data = await response.json();
+        const heroes = await response.json();
 
-        heroes.forEach(heroName => {
-            const hero = data.find(
+        selectedHeroes.forEach(heroName => {
+            const hero = heroes.find(
                 h => h.localized_name === heroName
             );
 
             if (!hero) {
-                console.log("Hero not found:", heroName);
+                console.error("Hero not found:", heroName);
                 return;
             }
 
-            console.log(heroName, hero);
+            const card = document.createElement("div");
+            card.className = "hero-card";
+
+            card.innerHTML = `
+                <img
+                    class="hero-image"
+                    src="${hero.img}"
+                    alt="${hero.localized_name}"
+                >
+
+                <h2>${hero.localized_name}</h2>
+
+                <button>View Guide</button>
+            `;
+
+            heroGrid.appendChild(card);
         });
 
     } catch (error) {
-        console.error("Error loading heroes:", error);
+        console.error("Could not load heroes:", error);
     }
 }
 
