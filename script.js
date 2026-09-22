@@ -21,16 +21,16 @@ const heroGuides = {
     "Phantom Assassin": {
         about: {
             strengths: [
-                "Evation",
-                "Biggest Crit Multiplierr in the Game",
-                "High Mobility"
+                "Evasion",
+                "Biggest Crit Multiplier in the Game",
+                "High Mobility",
                 "Long Range"
             ],
 
             weaknesses: [
                 "Only Physical Damage",
                 "Low Base HP",
-                "Reliant on BKB"
+                "Reliant on BKB",
                 "Weak against Magic"
             ]
         },
@@ -52,8 +52,6 @@ const heroGuides = {
         `
     }
 };
-
-
 /* =========================
    LOAD HEROES
    ========================= */
