@@ -27,7 +27,7 @@ async function loadHeroes() {
             card.innerHTML = `
                 <img
                     class="hero-image"
-                    src="${hero.img}"
+                    src="https://cdn.cloudflare.steamstatic.com${hero.img}"
                     alt="${hero.localized_name}"
                 >
 
