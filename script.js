@@ -11,7 +11,38 @@ const attributeNames = {
     int: "Intelligence",
     all: "Universal"
 };
+const attributeNames = {
+    str: "Strength",
+    agi: "Agility",
+    int: "Intelligence",
+    all: "Universal"
+};
 
+function getHeroFileName(heroName) {
+    return heroName
+        .toLowerCase()
+        .replaceAll("'", "")
+        .replaceAll(" ", "-");
+}
+
+async function loadHeroGuide(heroName) {
+    const fileName = getHeroFileName(heroName);
+
+    try {
+        const response = await fetch(
+            `guides/${fileName}.json`
+        );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        return await response.json();
+    }
+    catch {
+        return null;
+    }
+}
 
 /* =========================
    HERO GUIDES
@@ -218,3 +249,6 @@ function showHeroGuide(hero) {
    ========================= */
 
 loadHeroes();
+
+loadHeroGuide("Phantom Assassin")
+    .then(data => console.log(data));
