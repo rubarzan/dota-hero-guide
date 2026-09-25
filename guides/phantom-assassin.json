@@ -50,23 +50,29 @@
         "If PA fails to secure kills during her BKB timing, the following fight can become much easier for the enemy team"
       ]
     }
+  },
+
+  "draft": {
+    "pickAlongside": [],
+
+    "avoidAlongside": [],
+
+    "pickAgainst": [],
+
+    "avoidPickingAgainst": []
+  },
+
+  "gameplay": {
+    "playingAlongside": {
+      "laningPhase": [],
+      "preBKB": [],
+      "postBKB": []
+    },
+
+    "playingAgainst": {
+      "laningPhase": [],
+      "preBKB": [],
+      "postBKB": []
+    }
   }
-},
-
-  "against": [
-    "Example 1",
-    "Example 2"
-  ],
-
-  "alongside": [
-    "Example 1"
-  ],
-
-  "counterPicks": [
-    "Example 1"
-  ],
-
-  "synergyPicks": [
-    "Example 1"
-  ]
 }
