@@ -152,52 +152,29 @@ function createCommonItems(items) {
         return "";
     }
 
-
     const itemElements =
         items
-            .map((itemName, index) => {
+            .map(itemName => {
 
                 const item =
                     findItem(itemName);
 
-
                 if (!item) {
-
                     console.warn(
                         `Could not find Dota item: ${itemName}`
                     );
-
                     return "";
                 }
 
-
                 if (!item.img) {
-
                     console.warn(
                         `No image path found for item: ${itemName}`
                     );
-
                     return "";
                 }
 
-
                 const imageUrl =
                     `${ITEM_IMAGE_BASE_URL}${item.img}`;
-
-
-                /*
-                 * Two items per column:
-                 *
-                 * 1   3   5   7 ...
-                 * 2   4   6   8 ...
-                 */
-
-                const column =
-                    Math.floor(index / 2) + 1;
-
-                const row =
-                    (index % 2) + 1;
-
 
                 return `
                     <img
@@ -205,10 +182,6 @@ function createCommonItems(items) {
                         src="${imageUrl}"
                         alt="${item.dname || itemName}"
                         title="${item.dname || itemName}"
-                        style="
-                            grid-column: ${column};
-                            grid-row: ${row};
-                        "
                     >
                 `;
 
@@ -216,22 +189,12 @@ function createCommonItems(items) {
             .filter(Boolean)
             .join("");
 
-
     if (!itemElements) {
         return "";
     }
 
-
     return `
-        <div
-            class="common-items"
-            style="
-                grid-template-columns: repeat(
-                    ${Math.ceil(items.length / 2)},
-                    68px
-                );
-            "
-        >
+        <div class="common-items">
             ${itemElements}
         </div>
     `;
