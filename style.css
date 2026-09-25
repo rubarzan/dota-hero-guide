@@ -131,17 +131,10 @@ main {
 .common-items {
     display: grid;
 
-    /*
-     * 8 items per row
-     * 2 rows maximum
-     *
-     * Grid fills from left to right:
-     *
-     * 1  2  3  4  5  6  7  8
-     * 9 10 11 12 13 14 15 16
-     */
-    grid-template-columns: repeat(8, 68px);
+    grid-template-columns: repeat(7, 68px);
     grid-template-rows: repeat(2, 68px);
+
+    grid-auto-flow: column;
 
     gap: 4px;
 
