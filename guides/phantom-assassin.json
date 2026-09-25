@@ -1,0 +1,33 @@
+{
+  "about": {
+    "strengths": [
+      "Evasion",
+      "Biggest Crit Multiplier in the Game",
+      "High Mobility",
+      "Long Range"
+    ],
+    "weaknesses": [
+      "Only Physical Damage",
+      "Low Base HP",
+      "Reliant on BKB",
+      "Weak against Magic"
+    ]
+  },
+
+  "against": [
+    "Example 1",
+    "Example 2"
+  ],
+
+  "alongside": [
+    "Example 1"
+  ],
+
+  "counterPicks": [
+    "Example 1"
+  ],
+
+  "synergyPicks": [
+    "Example 1"
+  ]
+}
