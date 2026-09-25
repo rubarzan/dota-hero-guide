@@ -52,13 +52,27 @@
     }
   },
 
+  "commonItems": [
+    "Power Treads",
+    "Black King Bar",
+    "Battle Fury",
+    "Desolator",
+    "Abyssal Blade",
+    "Satanic",
+    "Divine Rapier",
+    "Nullifier",
+    "Manta Style",
+    "Sange and Yasha",
+    "Aghanim's Shard",
+    "Aghanim's Scepter",
+    "Monkey King Bar",
+    "Butterfly"
+  ],
+
   "draft": {
     "pickAlongside": [],
-
     "avoidAlongside": [],
-
     "pickAgainst": [],
-
     "avoidPickingAgainst": []
   },
 
