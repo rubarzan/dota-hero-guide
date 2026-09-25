@@ -18,17 +18,17 @@ const attributeNames = {
    ========================= */
 
 const ITEM_LIST_URL =
-    "https://www.dota2.com/datafeed/itemlist?language=english";
+    "https://api.opendota.com/api/constants/items";
 
-const ITEM_IMAGE_URL =
-    "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/";
+const ITEM_IMAGE_BASE_URL =
+    "https://cdn.cloudflare.steamstatic.com";
 
 
 let itemData = new Map();
 
 
 /* =========================
-   LOAD ITEM LIST
+   LOAD ITEM DATA
    ========================= */
 
 async function loadItemData() {
@@ -47,21 +47,14 @@ async function loadItemData() {
         const data =
             await response.json();
 
-        const items =
-            data?.result?.data?.itemabilities || [];
+        Object.values(data).forEach(item => {
 
-        items.forEach(item => {
-
-            const englishName =
-                item.name_english_loc ||
-                item.name_loc;
-
-            if (!englishName) {
+            if (!item.dname) {
                 return;
             }
 
             itemData.set(
-                englishName.toLowerCase(),
+                item.dname.toLowerCase(),
                 item
             );
         });
@@ -122,12 +115,17 @@ function createCommonItems(items) {
                     return "";
                 }
 
-                const itemFileName =
-                    item.name
-                        .replace(/^item_/, "");
+                if (!item.img) {
+
+                    console.warn(
+                        `No image found for item: ${itemName}`
+                    );
+
+                    return "";
+                }
 
                 const imageUrl =
-                    `${ITEM_IMAGE_URL}${itemFileName}.png`;
+                    `${ITEM_IMAGE_BASE_URL}${item.img}`;
 
                 return `
                     <img
