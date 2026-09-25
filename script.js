@@ -155,7 +155,7 @@ function createCommonItems(items) {
 
     const itemElements =
         items
-            .map(itemName => {
+            .map((itemName, index) => {
 
                 const item =
                     findItem(itemName);
@@ -185,12 +185,30 @@ function createCommonItems(items) {
                     `${ITEM_IMAGE_BASE_URL}${item.img}`;
 
 
+                /*
+                 * Two items per column:
+                 *
+                 * 1   3   5   7 ...
+                 * 2   4   6   8 ...
+                 */
+
+                const column =
+                    Math.floor(index / 2) + 1;
+
+                const row =
+                    (index % 2) + 1;
+
+
                 return `
                     <img
                         class="common-item-image"
                         src="${imageUrl}"
                         alt="${item.dname || itemName}"
                         title="${item.dname || itemName}"
+                        style="
+                            grid-column: ${column};
+                            grid-row: ${row};
+                        "
                     >
                 `;
 
@@ -205,16 +223,19 @@ function createCommonItems(items) {
 
 
     return `
-        <div class="common-items">
+        <div
+            class="common-items"
+            style="
+                grid-template-columns: repeat(
+                    ${Math.ceil(items.length / 2)},
+                    68px
+                );
+            "
+        >
             ${itemElements}
         </div>
     `;
 }
-
-
-/* =========================
-   HERO GUIDE FILES
-   ========================= */
 
 function getHeroFileName(heroName) {
 
