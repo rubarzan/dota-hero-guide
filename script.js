@@ -23,8 +23,28 @@ const ITEM_LIST_URL =
 const ITEM_IMAGE_BASE_URL =
     "https://cdn.cloudflare.steamstatic.com";
 
-
 let itemData = new Map();
+
+
+/* =========================
+   NORMALIZE ITEM NAME
+   ========================= */
+
+function normalizeItemName(name) {
+
+    if (!name) {
+        return "";
+    }
+
+    return name
+        .toString()
+        .toLowerCase()
+        .replaceAll("’", "'")
+        .replaceAll("&", "and")
+        .replaceAll("'", "")
+        .replace(/[^a-z0-9]+/g, "")
+        .trim();
+}
 
 
 /* =========================
@@ -47,20 +67,49 @@ async function loadItemData() {
         const data =
             await response.json();
 
-        Object.values(data).forEach(item => {
 
-            if (!item.dname) {
-                return;
+        Object.entries(data).forEach(
+            ([itemKey, item]) => {
+
+                if (!item) {
+                    return;
+                }
+
+
+                /*
+                 * Main lookup:
+                 * OpenDota display name
+                 */
+                if (item.dname) {
+
+                    itemData.set(
+                        normalizeItemName(item.dname),
+                        item
+                    );
+                }
+
+
+                /*
+                 * Additional generic lookup:
+                 * OpenDota internal item key
+                 *
+                 * This means the JSON can also use
+                 * an internal item name if needed.
+                 */
+                if (itemKey) {
+
+                    itemData.set(
+                        normalizeItemName(itemKey),
+                        item
+                    );
+                }
+
             }
+        );
 
-            itemData.set(
-                item.dname.toLowerCase(),
-                item
-            );
-        });
 
         console.log(
-            `Loaded ${itemData.size} Dota items.`
+            `Loaded ${itemData.size} Dota item references.`
         );
 
     } catch (error) {
@@ -83,9 +132,13 @@ function findItem(itemName) {
         return null;
     }
 
-    return itemData.get(
-        itemName.toLowerCase()
-    ) || null;
+    const normalizedName =
+        normalizeItemName(itemName);
+
+    return (
+        itemData.get(normalizedName) ||
+        null
+    );
 }
 
 
@@ -99,6 +152,7 @@ function createCommonItems(items) {
         return "";
     }
 
+
     const itemElements =
         items
             .map(itemName => {
@@ -106,42 +160,49 @@ function createCommonItems(items) {
                 const item =
                     findItem(itemName);
 
+
                 if (!item) {
 
                     console.warn(
-                        `Could not find item: ${itemName}`
+                        `Could not find Dota item: ${itemName}`
                     );
 
                     return "";
                 }
+
 
                 if (!item.img) {
 
                     console.warn(
-                        `No image found for item: ${itemName}`
+                        `No image path found for item: ${itemName}`
                     );
 
                     return "";
                 }
 
+
                 const imageUrl =
                     `${ITEM_IMAGE_BASE_URL}${item.img}`;
+
 
                 return `
                     <img
                         class="common-item-image"
                         src="${imageUrl}"
-                        alt="${itemName}"
-                        title="${itemName}"
+                        alt="${item.dname || itemName}"
+                        title="${item.dname || itemName}"
                     >
                 `;
+
             })
             .filter(Boolean)
             .join("");
 
+
     if (!itemElements) {
         return "";
     }
+
 
     return `
         <div class="common-items">
@@ -210,8 +271,15 @@ async function loadHeroes() {
                 "https://api.opendota.com/api/heroStats"
             );
 
+        if (!response.ok) {
+            throw new Error(
+                `Hero list request failed: ${response.status}`
+            );
+        }
+
         const heroes =
             await response.json();
+
 
         attributeOrder.forEach(attribute => {
 
@@ -228,15 +296,18 @@ async function loadHeroes() {
                             )
                     );
 
+
             if (attributeHeroes.length === 0) {
                 return;
             }
+
 
             const section =
                 document.createElement("section");
 
             section.className =
                 "attribute-section";
+
 
             const title =
                 document.createElement("h2");
@@ -247,11 +318,13 @@ async function loadHeroes() {
             title.textContent =
                 attributeNames[attribute];
 
+
             const grid =
                 document.createElement("div");
 
             grid.className =
                 "hero-grid";
+
 
             attributeHeroes.forEach(hero => {
 
@@ -260,6 +333,7 @@ async function loadHeroes() {
 
                 card.className =
                     "hero-card";
+
 
                 card.innerHTML = `
                     <img
@@ -273,6 +347,7 @@ async function loadHeroes() {
                     </div>
                 `;
 
+
                 card.addEventListener(
                     "click",
                     () => {
@@ -280,8 +355,10 @@ async function loadHeroes() {
                     }
                 );
 
+
                 grid.appendChild(card);
             });
+
 
             section.appendChild(title);
             section.appendChild(grid);
@@ -314,6 +391,7 @@ function createBulletList(items) {
         `;
     }
 
+
     return items
         .map(
             item =>
@@ -336,11 +414,13 @@ function createPhaseSection(
         return "";
     }
 
+
     const strengths =
         phaseData.strengths || [];
 
     const weaknesses =
         phaseData.weaknesses || [];
+
 
     return `
 
@@ -406,6 +486,7 @@ async function showHeroGuide(hero) {
     const content =
         document.getElementById("guide-content");
 
+
     const imageUrl =
         `https://cdn.cloudflare.steamstatic.com${hero.img}`;
 
@@ -447,11 +528,14 @@ async function showHeroGuide(hero) {
 
         `;
 
+
         guide.style.display = "block";
+
 
         guide.scrollIntoView({
             behavior: "smooth"
         });
+
 
         return;
     }
@@ -463,6 +547,7 @@ async function showHeroGuide(hero) {
 
     const heroProfile =
         guideData.heroProfile || {};
+
 
     const laningPhase =
         heroProfile.laningPhase;
@@ -557,6 +642,7 @@ async function showHeroGuide(hero) {
 
     guide.style.display = "block";
 
+
     guide.scrollIntoView({
         behavior: "smooth"
     });
@@ -569,9 +655,14 @@ async function showHeroGuide(hero) {
 
 async function start() {
 
+    /*
+     * Load item data first so every guide
+     * can use commonItems immediately.
+     */
     await loadItemData();
 
     await loadHeroes();
 }
+
 
 start();
