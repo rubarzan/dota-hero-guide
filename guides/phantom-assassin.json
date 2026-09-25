@@ -1,18 +1,57 @@
 {
-  "about": {
-    "strengths": [
-      "Evasion",
-      "Biggest Crit Multiplier in the Game",
-      "High Mobility",
-      "Long Range"
-    ],
-    "weaknesses": [
-      "Only Physical Damage",
-      "Low Base HP",
-      "Reliant on BKB",
-      "Weak against Magic"
-    ]
-  },
+  "heroProfile": {
+    "laningPhase": {
+      "description": "The laning phase is approximately the first 6 levels and around the first 7 minutes. These are rough guidelines rather than fixed time limits. The phase ends whenever PA can no longer play safely in lane, or when she chooses to leave the lane. PA generally prefers to stay in lane for longer because her jungle farming speed is poor and she usually lacks a reliable way to survive in the jungle before obtaining the Ring component for Battle Fury.",
+
+      "strengths": [
+        "Can secure ranged creeps safely with Stifling Dagger",
+        "One of the strongest heroes at level 2, with very high kill potential after reaching level 2",
+        "Can help her support during trades similarly to a ranged hero"
+      ],
+
+      "weaknesses": [
+        "Low base HP and poor HP regeneration",
+        "Relatively weak from level 4 onward unless she has secured kills and built an advantage",
+        "Uses her spells frequently, making Magic Stick particularly effective against her"
+      ]
+    },
+
+    "preBKB": {
+      "description": "Early-Mid Game. This phase begins after the laning phase and lasts until PA obtains her first BKB. PA is generally weak during this stage unless she secured kills during the laning phase and built an early advantage. The exact duration varies depending on how the game develops and when PA completes BKB.",
+
+      "strengths": [
+        "Can push lanes without appearing on the minimap while Blur is active",
+        "Stifling Dagger provides vision and slow with a low cooldown, making it easier for PA to secure assists during teamfights",
+        "Can quickly burst low-armor heroes when she is ahead"
+      ],
+
+      "weaknesses": [
+        "Heavily dependent on Battle Fury for fast farming",
+        "Relies heavily on Immaterial's evasion for survivability, which is relatively ineffective at this stage because many heroes rely heavily on spells and magic damage",
+        "Has a relatively weak level 6 power spike and usually struggles to keep her own tower alive",
+        "Has very poor farming speed before obtaining Battle Fury and cannot efficiently farm stacks"
+      ]
+    },
+
+    "postBKB": {
+      "description": "Late Game: Post-BKB. PA has a very strong power spike after purchasing BKB. BKB provides her with a major window to safely participate in teamfights, and whenever BKB is ready, she can look to join fights and act as the team's primary damage dealer. This phase begins once PA obtains BKB, regardless of the exact game time.",
+
+      "strengths": [
+        "Scales exceptionally well with additional attack damage because of her extremely high critical strike damage",
+        "Lifesteal is highly effective on PA because of the large amount of physical damage she can deal",
+        "One of the strongest heroes for purchasing Divine Rapier when attempting to come back from a losing game",
+        "The level 25 Triple Stifling Dagger talent is extremely powerful and significantly improves her impact in fights",
+        "Armor reduction is extremely valuable for PA because it significantly increases the damage of her physical attacks"
+      ],
+
+      "weaknesses": [
+        "Highly dependent on BKB's cooldown for safely participating in fights",
+        "Deals only physical damage, making her struggle against heroes that become immune to physical damage through Ghost effects and against heroes with naturally very high armor",
+        "If PA fails to secure kills during her BKB timing, the following fight can become much easier for the enemy team"
+      ]
+    }
+  }
+},
 
   "against": [
     "Example 1",
