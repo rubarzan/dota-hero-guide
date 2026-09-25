@@ -14,10 +14,151 @@ const attributeNames = {
 
 
 /* =========================
+   ITEM DATA
+   ========================= */
+
+const ITEM_LIST_URL =
+    "https://www.dota2.com/datafeed/itemlist?language=english";
+
+const ITEM_IMAGE_URL =
+    "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/";
+
+
+let itemData = new Map();
+
+
+/* =========================
+   LOAD ITEM LIST
+   ========================= */
+
+async function loadItemData() {
+
+    try {
+
+        const response =
+            await fetch(ITEM_LIST_URL);
+
+        if (!response.ok) {
+            throw new Error(
+                `Item list request failed: ${response.status}`
+            );
+        }
+
+        const data =
+            await response.json();
+
+        const items =
+            data?.result?.data?.itemabilities || [];
+
+        items.forEach(item => {
+
+            const englishName =
+                item.name_english_loc ||
+                item.name_loc;
+
+            if (!englishName) {
+                return;
+            }
+
+            itemData.set(
+                englishName.toLowerCase(),
+                item
+            );
+        });
+
+        console.log(
+            `Loaded ${itemData.size} Dota items.`
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not load item data:",
+            error
+        );
+    }
+}
+
+
+/* =========================
+   FIND ITEM
+   ========================= */
+
+function findItem(itemName) {
+
+    if (!itemName) {
+        return null;
+    }
+
+    return itemData.get(
+        itemName.toLowerCase()
+    ) || null;
+}
+
+
+/* =========================
+   CREATE COMMON ITEMS
+   ========================= */
+
+function createCommonItems(items) {
+
+    if (!Array.isArray(items) || items.length === 0) {
+        return "";
+    }
+
+    const itemElements =
+        items
+            .map(itemName => {
+
+                const item =
+                    findItem(itemName);
+
+                if (!item) {
+
+                    console.warn(
+                        `Could not find item: ${itemName}`
+                    );
+
+                    return "";
+                }
+
+                const itemFileName =
+                    item.name
+                        .replace(/^item_/, "");
+
+                const imageUrl =
+                    `${ITEM_IMAGE_URL}${itemFileName}.png`;
+
+                return `
+                    <img
+                        class="common-item-image"
+                        src="${imageUrl}"
+                        alt="${itemName}"
+                        title="${itemName}"
+                    >
+                `;
+            })
+            .filter(Boolean)
+            .join("");
+
+    if (!itemElements) {
+        return "";
+    }
+
+    return `
+        <div class="common-items">
+            ${itemElements}
+        </div>
+    `;
+}
+
+
+/* =========================
    HERO GUIDE FILES
    ========================= */
 
 function getHeroFileName(heroName) {
+
     return heroName
         .toLowerCase()
         .replaceAll("'", "")
@@ -26,12 +167,16 @@ function getHeroFileName(heroName) {
 
 
 async function loadHeroGuide(heroName) {
-    const fileName = getHeroFileName(heroName);
+
+    const fileName =
+        getHeroFileName(heroName);
 
     try {
-        const response = await fetch(
-            `guides/${fileName}.json`
-        );
+
+        const response =
+            await fetch(
+                `guides/${fileName}.json`
+            );
 
         if (!response.ok) {
             return null;
@@ -40,6 +185,7 @@ async function loadHeroGuide(heroName) {
         return await response.json();
 
     } catch (error) {
+
         console.error(
             `Could not load guide for ${heroName}:`,
             error
@@ -55,29 +201,34 @@ async function loadHeroGuide(heroName) {
    ========================= */
 
 async function loadHeroes() {
+
     const heroSelection =
         document.getElementById("hero-selection");
 
     try {
-        const response = await fetch(
-            "https://api.opendota.com/api/heroStats"
-        );
 
-        const heroes = await response.json();
+        const response =
+            await fetch(
+                "https://api.opendota.com/api/heroStats"
+            );
+
+        const heroes =
+            await response.json();
 
         attributeOrder.forEach(attribute => {
 
-            const attributeHeroes = heroes
-                .filter(
-                    hero =>
-                        hero.primary_attr === attribute
-                )
-                .sort(
-                    (a, b) =>
-                        a.localized_name.localeCompare(
-                            b.localized_name
-                        )
-                );
+            const attributeHeroes =
+                heroes
+                    .filter(
+                        hero =>
+                            hero.primary_attr === attribute
+                    )
+                    .sort(
+                        (a, b) =>
+                            a.localized_name.localeCompare(
+                                b.localized_name
+                            )
+                    );
 
             if (attributeHeroes.length === 0) {
                 return;
@@ -326,6 +477,16 @@ async function showHeroGuide(hero) {
 
 
     /* =========================
+       COMMON ITEMS
+       ========================= */
+
+    const commonItems =
+        createCommonItems(
+            guideData.commonItems
+        );
+
+
+    /* =========================
        GUIDE HTML
        ========================= */
 
@@ -338,9 +499,19 @@ async function showHeroGuide(hero) {
                 alt="${hero.localized_name}"
             >
 
-            <h2>
-                ${hero.localized_name}
-            </h2>
+            <div class="guide-title-area">
+
+                <div class="guide-title-row">
+
+                    <h2>
+                        ${hero.localized_name}
+                    </h2>
+
+                    ${commonItems}
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -398,4 +569,11 @@ async function showHeroGuide(hero) {
    START
    ========================= */
 
-loadHeroes();
+async function start() {
+
+    await loadItemData();
+
+    await loadHeroes();
+}
+
+start();
