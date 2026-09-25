@@ -132,21 +132,25 @@ main {
     display: grid;
 
     /*
-     * Maximum of 16 item slots:
-     * 8 columns × 2 rows
+     * 8 items per row
+     * 2 rows maximum
+     *
+     * Grid fills from left to right:
+     *
+     * 1  2  3  4  5  6  7  8
+     * 9 10 11 12 13 14 15 16
      */
-    grid-template-columns: repeat(8, 38px);
-    grid-template-rows: repeat(2, 38px);
+    grid-template-columns: repeat(8, 68px);
+    grid-template-rows: repeat(2, 68px);
 
     gap: 4px;
 
     width: max-content;
-    max-width: 340px;
 }
 
 .common-item-image {
-    width: 38px;
-    height: 38px;
+    width: 68px;
+    height: 68px;
 
     object-fit: cover;
     display: block;
@@ -218,14 +222,14 @@ main {
     }
 
     .common-items {
-        grid-template-columns: repeat(8, 32px);
-        grid-template-rows: repeat(2, 32px);
+        grid-template-columns: repeat(8, 58px);
+        grid-template-rows: repeat(2, 58px);
         gap: 3px;
     }
 
     .common-item-image {
-        width: 32px;
-        height: 32px;
+        width: 58px;
+        height: 58px;
     }
 }
 
@@ -255,7 +259,12 @@ main {
     }
 
     .common-items {
-        grid-template-columns: repeat(8, 32px);
-        grid-template-rows: repeat(2, 32px);
+        grid-template-columns: repeat(8, 58px);
+        grid-template-rows: repeat(2, 58px);
+    }
+
+    .common-item-image {
+        width: 58px;
+        height: 58px;
     }
 }
