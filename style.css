@@ -100,17 +100,55 @@ main {
     margin-bottom: 25px;
 }
 
-.guide-header img {
+.guide-header > img {
     width: 180px;
     height: 100px;
     object-fit: cover;
     border-radius: 6px;
 }
 
-.guide-header h2 {
+.guide-title-area {
+    min-width: 0;
+}
+
+.guide-title-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.guide-title-row h2 {
     margin: 0;
     color: white;
+    white-space: nowrap;
 }
+
+
+/* =========================
+   COMMON ITEMS
+   ========================= */
+
+.common-items {
+    display: grid;
+    grid-template-columns: repeat(8, 38px);
+    grid-template-rows: repeat(2, 38px);
+    gap: 4px;
+    width: max-content;
+    max-width: 340px;
+}
+
+.common-item-image {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    display: block;
+    border-radius: 3px;
+}
+
+
+/* =========================
+   GUIDE SECTIONS
+   ========================= */
 
 .guide-section {
     margin-bottom: 25px;
@@ -119,6 +157,7 @@ main {
 .guide-section h3 {
     color: white;
 }
+
 
 /* =========================
    PROS & CONS
@@ -158,6 +197,26 @@ main {
     margin-bottom: 0;
 }
 
+
+@media (max-width: 900px) {
+
+    .guide-title-row {
+        flex-wrap: wrap;
+    }
+
+    .common-items {
+        grid-template-columns: repeat(8, 32px);
+        grid-template-rows: repeat(2, 32px);
+        gap: 3px;
+    }
+
+    .common-item-image {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+
 @media (max-width: 700px) {
 
     .hero-grid {
@@ -171,5 +230,15 @@ main {
     .guide-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .guide-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .common-items {
+        grid-template-columns: repeat(8, 32px);
+        grid-template-rows: repeat(2, 32px);
     }
 }
