@@ -55,7 +55,8 @@ async function loadHeroGuide(heroName) {
    ========================= */
 
 async function loadHeroes() {
-    const heroSelection = document.getElementById("hero-selection");
+    const heroSelection =
+        document.getElementById("hero-selection");
 
     try {
         const response = await fetch(
@@ -67,31 +68,49 @@ async function loadHeroes() {
         attributeOrder.forEach(attribute => {
 
             const attributeHeroes = heroes
-                .filter(hero => hero.primary_attr === attribute)
-                .sort((a, b) =>
-                    a.localized_name.localeCompare(
-                        b.localized_name
-                    )
+                .filter(
+                    hero =>
+                        hero.primary_attr === attribute
+                )
+                .sort(
+                    (a, b) =>
+                        a.localized_name.localeCompare(
+                            b.localized_name
+                        )
                 );
 
             if (attributeHeroes.length === 0) {
                 return;
             }
 
-            const section = document.createElement("section");
-            section.className = "attribute-section";
+            const section =
+                document.createElement("section");
 
-            const title = document.createElement("h2");
-            title.className = "attribute-title";
-            title.textContent = attributeNames[attribute];
+            section.className =
+                "attribute-section";
 
-            const grid = document.createElement("div");
-            grid.className = "hero-grid";
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "attribute-title";
+
+            title.textContent =
+                attributeNames[attribute];
+
+            const grid =
+                document.createElement("div");
+
+            grid.className =
+                "hero-grid";
 
             attributeHeroes.forEach(hero => {
 
-                const card = document.createElement("div");
-                card.className = "hero-card";
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "hero-card";
 
                 card.innerHTML = `
                     <img
@@ -105,19 +124,24 @@ async function loadHeroes() {
                     </div>
                 `;
 
-                card.addEventListener("click", () => {
-                    showHeroGuide(hero);
-                });
+                card.addEventListener(
+                    "click",
+                    () => {
+                        showHeroGuide(hero);
+                    }
+                );
 
                 grid.appendChild(card);
             });
 
             section.appendChild(title);
             section.appendChild(grid);
+
             heroSelection.appendChild(section);
         });
 
     } catch (error) {
+
         console.error(
             "Could not load heroes:",
             error
@@ -127,24 +151,124 @@ async function loadHeroes() {
 
 
 /* =========================
+   CREATE BULLET LIST
+   ========================= */
+
+function createBulletList(items) {
+
+    if (!Array.isArray(items) || items.length === 0) {
+
+        return `
+            <li>
+                Guide content will be added here.
+            </li>
+        `;
+    }
+
+    return items
+        .map(
+            item =>
+                `<li>${item}</li>`
+        )
+        .join("");
+}
+
+
+/* =========================
+   CREATE HERO PROFILE PHASE
+   ========================= */
+
+function createPhaseSection(
+    title,
+    phaseData
+) {
+
+    if (!phaseData) {
+        return "";
+    }
+
+    const strengths =
+        phaseData.strengths || [];
+
+    const weaknesses =
+        phaseData.weaknesses || [];
+
+    return `
+
+        <div class="guide-section">
+
+            <h3>
+                ${title}
+            </h3>
+
+            ${
+                phaseData.description
+                    ? `
+                        <p>
+                            ${phaseData.description}
+                        </p>
+                    `
+                    : ""
+            }
+
+            <div class="pros-cons">
+
+                <div class="pros-cons-column">
+
+                    <h4>
+                        Strengths & Mechanics
+                    </h4>
+
+                    <ul>
+                        ${createBulletList(strengths)}
+                    </ul>
+
+                </div>
+
+
+                <div class="pros-cons-column">
+
+                    <h4>
+                        Weaknesses & Limitations
+                    </h4>
+
+                    <ul>
+                        ${createBulletList(weaknesses)}
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================
    SHOW HERO GUIDE
    ========================= */
 
 async function showHeroGuide(hero) {
 
-    const guide = document.getElementById("hero-guide");
-    const content = document.getElementById("guide-content");
+    const guide =
+        document.getElementById("hero-guide");
+
+    const content =
+        document.getElementById("guide-content");
 
     const imageUrl =
         `https://cdn.cloudflare.steamstatic.com${hero.img}`;
 
-    /*
-       Load the guide from:
-       guides/hero-name.json
-    */
+
+    /* =========================
+       LOAD GUIDE
+       ========================= */
 
     const guideData =
-        await loadHeroGuide(hero.localized_name);
+        await loadHeroGuide(
+            hero.localized_name
+        );
 
 
     /* =========================
@@ -154,18 +278,24 @@ async function showHeroGuide(hero) {
     if (!guideData) {
 
         content.innerHTML = `
+
             <div class="guide-header">
+
                 <img
                     src="${imageUrl}"
                     alt="${hero.localized_name}"
                 >
 
-                <h2>${hero.localized_name}</h2>
+                <h2>
+                    ${hero.localized_name}
+                </h2>
+
             </div>
 
             <p>
                 Guide not available yet.
             </p>
+
         `;
 
         guide.style.display = "block";
@@ -179,14 +309,20 @@ async function showHeroGuide(hero) {
 
 
     /* =========================
-       GUIDE DATA
+       HERO PROFILE
        ========================= */
 
-    const strengths =
-        guideData.about?.strengths || [];
+    const heroProfile =
+        guideData.heroProfile || {};
 
-    const weaknesses =
-        guideData.about?.weaknesses || [];
+    const laningPhase =
+        heroProfile.laningPhase;
+
+    const preBKB =
+        heroProfile.preBKB;
+
+    const postBKB =
+        heroProfile.postBKB;
 
 
     /* =========================
@@ -202,160 +338,46 @@ async function showHeroGuide(hero) {
                 alt="${hero.localized_name}"
             >
 
-            <h2>${hero.localized_name}</h2>
+            <h2>
+                ${hero.localized_name}
+            </h2>
 
         </div>
 
 
-        <!-- ABOUT -->
-
-        <div class="guide-section">
-
-            <h3>About This Hero</h3>
-
-            <div class="pros-cons">
-
-
-                <!-- STRENGTHS -->
-
-                <div class="pros-cons-column">
-
-                    <h4>
-                        Strengths & Mechanics
-                    </h4>
-
-                    <ul>
-
-                        ${
-                            strengths.length > 0
-
-                                ? strengths
-                                    .map(
-                                        item =>
-                                            `<li>${item}</li>`
-                                    )
-                                    .join("")
-
-                                : `
-                                    <li>
-                                        Guide content
-                                        will be added here.
-                                    </li>
-                                `
-                        }
-
-                    </ul>
-
-                </div>
-
-
-                <!-- WEAKNESSES -->
-
-                <div class="pros-cons-column">
-
-                    <h4>
-                        Weaknesses & Limitations
-                    </h4>
-
-                    <ul>
-
-                        ${
-                            weaknesses.length > 0
-
-                                ? weaknesses
-                                    .map(
-                                        item =>
-                                            `<li>${item}</li>`
-                                    )
-                                    .join("")
-
-                                : `
-                                    <li>
-                                        Guide content
-                                        will be added here.
-                                    </li>
-                                `
-                        }
-
-                    </ul>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- AGAINST -->
+        <!-- HERO PROFILE -->
 
         <div class="guide-section">
 
             <h3>
-                How to Play Against This Hero
+                Hero Profile
             </h3>
-
-            <p>
-                ${
-                    guideData.against
-                    || "Guide content will be added here."
-                }
-            </p>
 
         </div>
 
 
-        <!-- ALONGSIDE -->
+        <!-- LANING PHASE -->
 
-        <div class="guide-section">
-
-            <h3>
-                How to Play Alongside This Hero
-            </h3>
-
-            <p>
-                ${
-                    guideData.alongside
-                    || "Guide content will be added here."
-                }
-            </p>
-
-        </div>
+        ${createPhaseSection(
+            "Laning Phase",
+            laningPhase
+        )}
 
 
-        <!-- COUNTER PICKS -->
+        <!-- EARLY-MID GAME -->
 
-        <div class="guide-section">
-
-            <h3>
-                What to Pick Against This Hero
-            </h3>
-
-            <p>
-                ${
-                    guideData.counterPicks
-                    || "Guide content will be added here."
-                }
-            </p>
-
-        </div>
+        ${createPhaseSection(
+            "Early-Mid Game",
+            preBKB
+        )}
 
 
-        <!-- SYNERGY PICKS -->
+        <!-- LATE GAME -->
 
-        <div class="guide-section">
-
-            <h3>
-                What to Pick Alongside This Hero
-            </h3>
-
-            <p>
-                ${
-                    guideData.synergyPicks
-                    || "Guide content will be added here."
-                }
-            </p>
-
-        </div>
+        ${createPhaseSection(
+            "Late Game: Post-BKB",
+            postBKB
+        )}
 
     `;
 
