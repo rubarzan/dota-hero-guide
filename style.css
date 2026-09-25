@@ -131,10 +131,7 @@ main {
 .common-items {
     display: grid;
 
-    grid-template-columns: repeat(7, 68px);
     grid-template-rows: repeat(2, 68px);
-
-    grid-auto-flow: column;
 
     gap: 4px;
 
@@ -150,12 +147,6 @@ main {
 
     border-radius: 3px;
 }
-
-
-/* =========================
-   GUIDE SECTIONS
-   ========================= */
-
 .guide-section {
     margin-bottom: 25px;
 }
