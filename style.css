@@ -268,3 +268,75 @@ main {
         height: 58px;
     }
 }
+/* =========================
+   GAMEPLAY TIPS
+   ========================= */
+
+.gameplay-subsection {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+.gameplay-subsection:first-child {
+    margin-top: 0;
+}
+
+.gameplay-subsection h4 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.gameplay-subsection ul {
+    margin: 0;
+    padding-left: 22px;
+}
+
+.gameplay-subsection li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.gameplay-subsection li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   GAMEPLAY MAIN SECTION
+   ========================= */
+
+.guide-section > .gameplay-subsection {
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.guide-section > .gameplay-subsection:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.13);
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .gameplay-subsection {
+        padding: 15px 16px;
+        margin-top: 14px;
+    }
+
+    .gameplay-subsection h4 {
+        font-size: 17px;
+    }
+
+    .gameplay-subsection li {
+        line-height: 1.55;
+    }
+}
