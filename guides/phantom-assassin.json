@@ -78,9 +78,37 @@
 
   "gameplay": {
     "playingAlongside": {
-      "laningPhase": [],
-      "preBKB": [],
-      "postBKB": []
+      "general": [
+        "If you want to help Phantom Assassin (PA) survive and escape a bad situation, do Not run towards her. Stay within Blink Strike range whenever possible so PA can Blink on you.",
+        "PA has a lot of Damage but generally lacks CC (Crowd Control). Try to provide that for her instead of getting more damage.",
+        "PA prefers not to be the first one to Blink in during a fight. Try to start the engagement around her when she is ready, to set up a good trade for her. (For example, tank the enemy's first stun so they cannot stun PA immediately after she Blinks in.)"
+      ],
+
+      "laningPhase": [
+        "Try to secure enough experience from the first waves to reach level 2 before the enemy. If necessary, push the lane to reach level 2 before the enemy does. (If your creeps are alive and theirs are dead, you will get level 2 before they do.)",
+        "Make sure to have enough mana, HP (Health Points), and consumables to take a fight at level 2.",
+        "Trading with the enemy support around PA is usually good, as she can simply throw a Dagger from a distance while farming. (Usually, it is better to focus on the enemy's squishy support rather than the enemy's tanky offlaner.)",
+        "After level 3, PA is not that powerful. Try to separate the lane by pulling the small camp and trade farm with the enemy without fighting.",
+        "If the enemy does not have a powerful kill duo, rotating toward your offlane and applying pressure when the enemy offlaner is around level 5 can be a good way to attract attention away from PA's lane, allowing her to stay in lane longer in a 1v1 situation.",
+        "If the item is good for your hero, getting a Blight Stone will help PA deal more damage in lane, especially against low-armor heroes. (You can check the enemies' armor before the game begins. Against heroes with 3 or less armor, Blight Stone can be a good option. Do check PA's items so you do not both buy it, as the item's debuff will not stack.)",
+        "As a Midlaner, it is usually more effective to gank away from PA (unless you can take the enemy tower for her, in which case it will be very effective to do so, as taking the tower will reduce her interaction with the enemy). The less attention PA's lane gets, the better."
+      ],
+
+      "preBKB": [
+        "Before she gets BF (Battle Fury), PA does not farm that fast, so do not focus on her. It is more effective to help other lanes and attract attention away from PA's lane. (Unless she had a very successful lane with some kills, in which case it is better to leave her alone.)",
+        "It is very effective to take the enemy safelane tower before she gets BF. That way, she can farm more safely and efficiently.",
+        "PA is not good at protecting her own backline, so as a backliner, it is better to prioritize items that keep YOU alive first. (Such as Glimmer for Supports.)",
+        "Unless you are confident you will win, avoid long fights, as PA is not good at fighting before BKB (Black King Bar) and you may end up in a 4v5 situation.",
+        "Do not ask a PA without BKB to join fights. Know that it is better if she is just farming."
+      ],
+
+      "postBKB": [
+        "Check PA's inventory and be ready with Smoke when she is close to completing BKB. Taking a fight with the Powerspike of a fresh BKB will be a great way to take advantage of the timing, even if you are behind.",
+        "If you are a Core, try to time your items so you finish your own Core item at the same time as or before PA's BKB, so you can hit a bigger Powerspike together.",
+        "Try to help PA save her BKB with your items and spells when you can. Getting items that give her a Dispel, such as Lotus Orb, or Magic Resistance, such as Glimmer Cape, can be very effective. Spells that give her Magic Immunity can also be very effective.",
+        "Providing vision on the enemy's backline, especially their save Heroes, can be very effective for PA.",
+        "If the enemy has BKB-piercing spells (such as Roar or Black Hole), it will be hard for PA to jump in. If you can force the enemy to use those spells on you and give PA an opening, it can win a fight. (Do not let the enemy control PA during her BKB.)"
+      ]
     },
 
     "playingAgainst": {
