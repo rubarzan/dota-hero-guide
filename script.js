@@ -76,10 +76,6 @@ async function loadItemData() {
                 }
 
 
-                /*
-                 * Main lookup:
-                 * OpenDota display name
-                 */
                 if (item.dname) {
 
                     itemData.set(
@@ -89,13 +85,6 @@ async function loadItemData() {
                 }
 
 
-                /*
-                 * Additional generic lookup:
-                 * OpenDota internal item key
-                 *
-                 * This means the JSON can also use
-                 * an internal item name if needed.
-                 */
                 if (itemKey) {
 
                     itemData.set(
@@ -200,6 +189,11 @@ function createCommonItems(items) {
     `;
 }
 
+
+/* =========================
+   HERO GUIDE FILES
+   ========================= */
+
 function getHeroFileName(heroName) {
 
     return heroName
@@ -264,7 +258,6 @@ async function loadHeroes() {
         const heroes =
             await response.json();
 
-
         attributeOrder.forEach(attribute => {
 
             const attributeHeroes =
@@ -280,18 +273,15 @@ async function loadHeroes() {
                             )
                     );
 
-
             if (attributeHeroes.length === 0) {
                 return;
             }
-
 
             const section =
                 document.createElement("section");
 
             section.className =
                 "attribute-section";
-
 
             const title =
                 document.createElement("h2");
@@ -302,13 +292,11 @@ async function loadHeroes() {
             title.textContent =
                 attributeNames[attribute];
 
-
             const grid =
                 document.createElement("div");
 
             grid.className =
                 "hero-grid";
-
 
             attributeHeroes.forEach(hero => {
 
@@ -317,7 +305,6 @@ async function loadHeroes() {
 
                 card.className =
                     "hero-card";
-
 
                 card.innerHTML = `
                     <img
@@ -331,7 +318,6 @@ async function loadHeroes() {
                     </div>
                 `;
 
-
                 card.addEventListener(
                     "click",
                     () => {
@@ -339,10 +325,8 @@ async function loadHeroes() {
                     }
                 );
 
-
                 grid.appendChild(card);
             });
-
 
             section.appendChild(title);
             section.appendChild(grid);
@@ -375,7 +359,6 @@ function createBulletList(items) {
         `;
     }
 
-
     return items
         .map(
             item =>
@@ -398,13 +381,11 @@ function createPhaseSection(
         return "";
     }
 
-
     const strengths =
         phaseData.strengths || [];
 
     const weaknesses =
         phaseData.weaknesses || [];
-
 
     return `
 
@@ -438,7 +419,6 @@ function createPhaseSection(
 
                 </div>
 
-
                 <div class="pros-cons-column">
 
                     <h4>
@@ -459,6 +439,154 @@ function createPhaseSection(
 
 
 /* =========================
+   CREATE GAMEPLAY SECTION
+   ========================= */
+
+function createGameplaySection(
+    title,
+    gameplayData
+) {
+
+    if (!gameplayData) {
+        return "";
+    }
+
+    let sections = "";
+
+
+    /* =========================
+       GENERAL
+       ========================= */
+
+    if (
+        Array.isArray(gameplayData.general) &&
+        gameplayData.general.length > 0
+    ) {
+
+        sections += `
+
+            <div class="gameplay-subsection">
+
+                <h4>
+                    General Tips
+                </h4>
+
+                <ul>
+                    ${createBulletList(
+                        gameplayData.general
+                    )}
+                </ul>
+
+            </div>
+        `;
+    }
+
+
+    /* =========================
+       LANING PHASE
+       ========================= */
+
+    if (
+        Array.isArray(gameplayData.laningPhase) &&
+        gameplayData.laningPhase.length > 0
+    ) {
+
+        sections += `
+
+            <div class="gameplay-subsection">
+
+                <h4>
+                    Laning Phase
+                </h4>
+
+                <ul>
+                    ${createBulletList(
+                        gameplayData.laningPhase
+                    )}
+                </ul>
+
+            </div>
+        `;
+    }
+
+
+    /* =========================
+       PRE-BKB
+       ========================= */
+
+    if (
+        Array.isArray(gameplayData.preBKB) &&
+        gameplayData.preBKB.length > 0
+    ) {
+
+        sections += `
+
+            <div class="gameplay-subsection">
+
+                <h4>
+                    Early-Mid Game (Before BKB)
+                </h4>
+
+                <ul>
+                    ${createBulletList(
+                        gameplayData.preBKB
+                    )}
+                </ul>
+
+            </div>
+        `;
+    }
+
+
+    /* =========================
+       POST-BKB
+       ========================= */
+
+    if (
+        Array.isArray(gameplayData.postBKB) &&
+        gameplayData.postBKB.length > 0
+    ) {
+
+        sections += `
+
+            <div class="gameplay-subsection">
+
+                <h4>
+                    Late Game (Post-BKB)
+                </h4>
+
+                <ul>
+                    ${createBulletList(
+                        gameplayData.postBKB
+                    )}
+                </ul>
+
+            </div>
+        `;
+    }
+
+
+    if (!sections) {
+        return "";
+    }
+
+
+    return `
+
+        <div class="guide-section">
+
+            <h3>
+                ${title}
+            </h3>
+
+            ${sections}
+
+        </div>
+    `;
+}
+
+
+/* =========================
    SHOW HERO GUIDE
    ========================= */
 
@@ -470,24 +598,14 @@ async function showHeroGuide(hero) {
     const content =
         document.getElementById("guide-content");
 
-
     const imageUrl =
         `https://cdn.cloudflare.steamstatic.com${hero.img}`;
-
-
-    /* =========================
-       LOAD GUIDE
-       ========================= */
 
     const guideData =
         await loadHeroGuide(
             hero.localized_name
         );
 
-
-    /* =========================
-       GUIDE NOT AVAILABLE
-       ========================= */
 
     if (!guideData) {
 
@@ -512,26 +630,18 @@ async function showHeroGuide(hero) {
 
         `;
 
-
         guide.style.display = "block";
-
 
         guide.scrollIntoView({
             behavior: "smooth"
         });
 
-
         return;
     }
 
 
-    /* =========================
-       HERO PROFILE
-       ========================= */
-
     const heroProfile =
         guideData.heroProfile || {};
-
 
     const laningPhase =
         heroProfile.laningPhase;
@@ -543,10 +653,6 @@ async function showHeroGuide(hero) {
         heroProfile.postBKB;
 
 
-    /* =========================
-       COMMON ITEMS
-       ========================= */
-
     const commonItems =
         createCommonItems(
             guideData.commonItems
@@ -554,8 +660,18 @@ async function showHeroGuide(hero) {
 
 
     /* =========================
-       GUIDE HTML
+       GAMEPLAY DATA
        ========================= */
+
+    const gameplay =
+        guideData.gameplay || {};
+
+    const playingAlongside =
+        gameplay.playingAlongside || {};
+
+    const playingAgainst =
+        gameplay.playingAgainst || {};
+
 
     content.innerHTML = `
 
@@ -594,38 +710,43 @@ async function showHeroGuide(hero) {
         </div>
 
 
-        <!-- LANING PHASE -->
+        <!-- HERO PROFILE PHASES -->
 
         ${createPhaseSection(
             "Laning Phase",
             laningPhase
         )}
 
-
-        <!-- EARLY-MID GAME -->
-
         ${createPhaseSection(
             "Early-Mid Game",
             preBKB
         )}
-
-
-        <!-- LATE GAME -->
 
         ${createPhaseSection(
             "Late Game: Post-BKB",
             postBKB
         )}
 
+
+        <!-- PLAYING ALONGSIDE -->
+
+        ${createGameplaySection(
+            "How to Play Alongside PA",
+            playingAlongside
+        )}
+
+
+        <!-- PLAYING AGAINST -->
+
+        ${createGameplaySection(
+            "How to Play Against PA",
+            playingAgainst
+        )}
+
     `;
 
 
-    /* =========================
-       SHOW GUIDE
-       ========================= */
-
     guide.style.display = "block";
-
 
     guide.scrollIntoView({
         behavior: "smooth"
@@ -639,14 +760,9 @@ async function showHeroGuide(hero) {
 
 async function start() {
 
-    /*
-     * Load item data first so every guide
-     * can use commonItems immediately.
-     */
     await loadItemData();
 
     await loadHeroes();
 }
-
 
 start();
