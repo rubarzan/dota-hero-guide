@@ -96,14 +96,27 @@
       "Heroes with high armor or physical immunity.",
       "Heroes with BKB-piercing stuns."
     ],
-    "heroes": []
+    "heroes": [
+      "Pugna",
+      "muerta",
+      "terrorblade",
+      "Beastmaster",
+      "necrophos",
+      "templar assassin"
+    ]
   },
   "avoidPickingAgainst": {
     "guidelines": [
       "Heroes that are susceptible to being bursted down.",
       "Heroes that rely heavily on positioning to survive."
     ],
-    "heroes": []
+    "heroes": [
+      "Razor",
+      "Slark",
+      "Phantom Lancer",
+      "Sniper",
+      "Huskar"
+    ]
   }
 },
 
