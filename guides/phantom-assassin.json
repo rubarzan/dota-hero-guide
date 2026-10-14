@@ -112,9 +112,29 @@
     },
 
     "playingAgainst": {
-      "laningPhase": [],
-      "preBKB": [],
-      "postBKB": []
-    }
+  "general": [
+    "Keep track of PA's items and power spikes. Your approach should change significantly depending on whether she has completed Battle Fury (BF), Black King Bar (BKB), Desolator, Abyssal Blade, or Satanic.",
+    "If PA is ahead, protect your backline, as she likes to jump on low-armor backliners early on.",
+    "Try to find and initiate on PA when going for fights, as forcing her to use BKB early or making her lose a lot of HP early in a fight can make the fight much harder for her."
+  ],
+  "laningPhase": [
+    "Keep the lane pushed out and fix the lane equilibrium after you reach level 2 so she doesn't get an early level 2 advantage.",
+    "As a Support, avoid fighting her Support on the side around level 2, as PA can join the fight much more effectively than your Offlaner.",
+    "She is an Agility hero with relatively low HP regeneration, so you can punish her with your spells and force her to spend more on consumables or stay at low HP.",
+    "Buy a Magic Stick at the start, as she will use Stifling Dagger frequently.",
+    "If you are a Midlaner or Position 4, consider ganking PA's lane, especially around 5:30 or 10:30 (when the catapults arrive), or when runes are available. Bringing the fight to PA's lane can be very effective."
+  ],
+  "preBKB": [
+    "If PA had a poor lane, keep pressuring her lane and try to kick her out of her safelane side of the map, as she cannot farm Ancients efficiently at this stage.",
+    "At this stage of the game, she is easy to kill but hard to find. If you find her, try to focus her with your spells.",
+    "After completing BF (Battle Fury), PA usually farms around her Triangle, so try to smoke-gank her before she completes her second item."
+  ],
+  "postBKB": [
+    "Track PA's BKB (Black King Bar) timing. PA players usually want to fight as soon as they get BKB, so be ready for it and look for opportunities to fight when her BKB is on cooldown.",
+    "Try to kite her during her BKB duration. Items like Glimmer Cape and Ghost Scepter, as well as any BKB-piercing stun, can help a lot.",
+    "PA deals only physical damage, so providing armor or a Ghost effect can help a lot against her.",
+    "Try to save BKB-piercing spells for her BKB duration, as she is much easier to kill without BKB."
+  ]
+}
   }
 }
