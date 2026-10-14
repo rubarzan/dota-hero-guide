@@ -341,26 +341,55 @@ main {
     }
 }
 
-/* DRAFT SECTION */
+
+/* =========================
+   DRAFT SECTION
+   ========================= */
 
 .draft-layout {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
 }
 
 .draft-card {
     min-width: 0;
     padding: 18px;
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    border: 1px solid transparent;
     border-radius: 10px;
     transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.draft-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
+/* Green: recommended picks */
+.draft-card:has(h4) {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.draft-card:nth-child(1),
+.draft-card:nth-child(3) {
+    background: rgba(40, 150, 80, 0.13);
+    border-color: rgba(70, 200, 110, 0.35);
+}
+
+.draft-card:nth-child(1):hover,
+.draft-card:nth-child(3):hover {
+    background: rgba(40, 150, 80, 0.22);
+}
+
+/* Red: avoid picks */
+.draft-card:nth-child(2),
+.draft-card:nth-child(4) {
+    background: rgba(190, 45, 45, 0.13);
+    border-color: rgba(230, 80, 80, 0.35);
+}
+
+.draft-card:nth-child(2):hover,
+.draft-card:nth-child(4):hover {
+    background: rgba(190, 45, 45, 0.22);
 }
 
 .draft-card h4 {
@@ -400,13 +429,15 @@ main {
 
 .draft-empty {
     margin: 0;
-    color: #888;
+    color: #aaa;
     font-size: 13px;
 }
 
 @media (max-width: 700px) {
     .draft-layout {
         grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 10px;
     }
 
     .draft-card {
