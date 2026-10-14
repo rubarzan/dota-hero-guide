@@ -62,6 +62,7 @@
   ],
   
 
+
 "draft": {
   "pickAlongside": {
     "guidelines": [
@@ -78,18 +79,29 @@
     ]
   },
   "avoidAlongside": {
-    "guidelines": [],
+    "guidelines": [
+      "Heroes that rely on passives or evasion to survive or function effectively.",
+      "Core heroes that are weak in the early to mid game.",
+      "Heroes that deal only physical damage."
+    ],
     "heroes": []
   },
   "pickAgainst": {
-    "guidelines": [],
+    "guidelines": [
+      "Heroes with high armor or physical immunity.",
+      "Heroes with BKB-piercing stuns."
+    ],
     "heroes": []
   },
   "avoidPickingAgainst": {
-    "guidelines": [],
+    "guidelines": [
+      "Heroes that are susceptible to being bursted down.",
+      "Heroes that rely heavily on positioning to survive."
+    ],
     "heroes": []
   }
 },
+
 
   "gameplay": {
     "playingAlongside": {
