@@ -69,12 +69,18 @@
     "Butterfly"
   ],
 
-  "draft": {
-    "pickAlongside": [],
+ 
+"draft": {
+    "pickAlongside": [
+        "Slardar",
+        "Magnus",
+        "Vengeful Spirit"
+    ],
     "avoidAlongside": [],
     "pickAgainst": [],
     "avoidPickingAgainst": []
-  },
+}
+
 
   "gameplay": {
     "playingAlongside": {
