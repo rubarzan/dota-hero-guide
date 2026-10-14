@@ -60,17 +60,20 @@
     "Monkey King Bar",
     "Butterfly"
   ],
-  "draft": {
-    "pickAlongside": [
-      "Slardar",
-      "Magnus",
-      "Vengeful Spirit"
-      "Omniknight"
-    ],
-    "avoidAlongside": [],
-    "pickAgainst": [],
-    "avoidPickingAgainst": []
-  },
+  
+"draft": {
+  "pickAlongside": [
+    "Slardar",
+    "Magnus",
+    "Vengeful Spirit",
+    "Omniknight",
+    "Oracle"
+  ],
+  "avoidAlongside": [],
+  "pickAgainst": [],
+  "avoidPickingAgainst": []
+},
+
   "gameplay": {
     "playingAlongside": {
       "general": [
