@@ -61,17 +61,34 @@
     "Butterfly"
   ],
   
+
 "draft": {
-  "pickAlongside": [
-    "Slardar",
-    "Magnus",
-    "Vengeful Spirit",
-    "Omniknight",
-    "Oracle"
-  ],
-  "avoidAlongside": [],
-  "pickAgainst": [],
-  "avoidPickingAgainst": []
+  "pickAlongside": {
+    "guidelines": [
+      "Heroes that can provide bonus damage or armor reduction are good for PA.",
+      "Heroes that can provide CC (Crowd Control), vision, and initiation are also good for PA.",
+      "Heroes that allow her to jump in without needing BKB (Black King Bar) to survive."
+    ],
+    "heroes": [
+      "Slardar",
+      "Magnus",
+      "Vengeful Spirit",
+      "Omniknight",
+      "Oracle"
+    ]
+  },
+  "avoidAlongside": {
+    "guidelines": [],
+    "heroes": []
+  },
+  "pickAgainst": {
+    "guidelines": [],
+    "heroes": []
+  },
+  "avoidPickingAgainst": {
+    "guidelines": [],
+    "heroes": []
+  }
 },
 
   "gameplay": {
