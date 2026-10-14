@@ -449,3 +449,14 @@ main {
         height: 58px;
     }
 }
+
+/* Force colored borders for Draft cards */
+#guide-content .draft-layout > .draft-card:nth-child(1),
+#guide-content .draft-layout > .draft-card:nth-child(3) {
+    border: 2px solid #35b866 !important;
+}
+
+#guide-content .draft-layout > .draft-card:nth-child(2),
+#guide-content .draft-layout > .draft-card:nth-child(4) {
+    border: 2px solid #e05252 !important;
+}
