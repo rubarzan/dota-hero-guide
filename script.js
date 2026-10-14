@@ -19,33 +19,6 @@ let itemData = new Map();
 let allHeroes = [];
 
 /* =========================
-   DRAFT GUIDELINES
-   ========================= */
-
-const draftGuidelines = {
-    pickAlongside: [
-        "Heroes that can provide bonus damage or armor reduction are good for PA.",
-        "Heroes that can provide CC (Crowd Control), vision, and initiation are also good for PA."
-    ],
-
-    avoidAlongside: [
-        "Heroes that rely on passives or evasion to survive or function effectively.",
-        "Core heroes that are weak in the early to mid game.",
-        "Heroes that deal only physical damage."
-    ],
-
-    pickAgainst: [
-        "Heroes with high armor or physical immunity.",
-        "Heroes with BKB (Black King Bar)-piercing stuns."
-    ],
-
-    avoidPickingAgainst: [
-        "Heroes that are susceptible to being bursted down.",
-        "Heroes that rely heavily on positioning to survive."
-    ]
-};
-
-/* =========================
    NORMALIZE ITEM NAME
    ========================= */
 
@@ -242,7 +215,7 @@ async function loadHeroes() {
 
 function createBulletList(items) {
     if (!Array.isArray(items) || items.length === 0) {
-        return "<li>Guide content will be added here.</li>";
+        return "";
     }
 
     return items.map(item => `<li>${item}</li>`).join("");
@@ -356,8 +329,16 @@ function createDraftHeroImages(heroNames) {
    ========================= */
 
 function createDraftCard(title, key, draft) {
-    const tips = draftGuidelines[key] || [];
-    const heroNames = Array.isArray(draft[key]) ? draft[key] : [];
+    const cardData = draft[key] || {};
+
+    // Guidelines and heroes now come from the hero's JSON file.
+    const tips = Array.isArray(cardData.guidelines)
+        ? cardData.guidelines
+        : [];
+
+    const heroNames = Array.isArray(cardData.heroes)
+        ? cardData.heroes
+        : [];
 
     return `
         <div class="draft-card">
@@ -474,4 +455,3 @@ async function start() {
 }
 
 start();
-
