@@ -102,6 +102,7 @@ function createCommonItems(items) {
                 src="${imageUrl}"
                 alt="${item.dname || itemName}"
                 title="${item.dname || itemName}"
+                loading="lazy"
             >
         `;
     }).filter(Boolean).join("");
@@ -148,6 +149,11 @@ async function loadHeroGuide(heroName) {
 async function loadHeroes() {
     const heroSelection = document.getElementById("hero-selection");
 
+    if (!heroSelection) {
+        console.error('Element "hero-selection" was not found.');
+        return;
+    }
+
     try {
         const response = await fetch(
             "https://api.opendota.com/api/heroStats"
@@ -160,6 +166,8 @@ async function loadHeroes() {
         const heroes = await response.json();
 
         allHeroes = heroes;
+
+        heroSelection.innerHTML = "";
 
         attributeOrder.forEach(attribute => {
             const attributeHeroes = heroes
@@ -187,8 +195,9 @@ async function loadHeroes() {
                 card.innerHTML = `
                     <img
                         class="hero-image"
-                        src="https://cdn.cloudflare.steamstatic.com${hero.img}"
+                        src="${ITEM_IMAGE_BASE_URL}${hero.img}"
                         alt="${hero.localized_name}"
+                        loading="lazy"
                     >
                     <div class="hero-name">${hero.localized_name}</div>
                 `;
@@ -218,7 +227,9 @@ function createBulletList(items) {
         return "";
     }
 
-    return items.map(item => `<li>${item}</li>`).join("");
+    return items
+        .map(item => `<li>${item}</li>`)
+        .join("");
 }
 
 /* =========================
@@ -235,7 +246,9 @@ function createPhaseSection(title, phaseData) {
         <div class="guide-section">
             <h3>${title}</h3>
 
-            ${phaseData.description ? `<p>${phaseData.description}</p>` : ""}
+            ${phaseData.description
+                ? `<p>${phaseData.description}</p>`
+                : ""}
 
             <div class="pros-cons">
                 <div class="pros-cons-column">
@@ -313,7 +326,7 @@ function createDraftHeroImages(heroNames) {
         return `
             <img
                 class="draft-hero-image"
-                src="https://cdn.cloudflare.steamstatic.com${hero.img}"
+                src="${ITEM_IMAGE_BASE_URL}${hero.img}"
                 alt="${hero.localized_name}"
                 title="${hero.localized_name}"
                 loading="lazy"
@@ -321,7 +334,8 @@ function createDraftHeroImages(heroNames) {
         `;
     }).filter(Boolean).join("");
 
-    return images || '<p class="draft-empty">No matching hero images found.</p>';
+    return images ||
+        '<p class="draft-empty">No matching hero images found.</p>';
 }
 
 /* =========================
@@ -331,8 +345,7 @@ function createDraftHeroImages(heroNames) {
 function createDraftCard(title, key, draft) {
     const cardData = draft[key] || {};
 
-    // Guidelines and heroes now come from the hero's JSON file.
-    const tips = Array.isArray(cardData.guidelines)
+    const guidelines = Array.isArray(cardData.guidelines)
         ? cardData.guidelines
         : [];
 
@@ -345,7 +358,7 @@ function createDraftCard(title, key, draft) {
             <h4>${title}</h4>
 
             <ul class="draft-guidelines">
-                ${createBulletList(tips)}
+                ${createBulletList(guidelines)}
             </ul>
 
             <div class="draft-hero-grid">
@@ -373,7 +386,11 @@ function createDraftSectionGroup(guideData) {
 
                 ${createDraftCard("Pick Against", "pickAgainst", draft)}
 
-                ${createDraftCard("Avoid Picking Against", "avoidPickingAgainst", draft)}
+                ${createDraftCard(
+                    "Avoid Picking Against",
+                    "avoidPickingAgainst",
+                    draft
+                )}
             </div>
         </div>
     `;
@@ -387,7 +404,12 @@ async function showHeroGuide(hero) {
     const guide = document.getElementById("hero-guide");
     const content = document.getElementById("guide-content");
 
-    const imageUrl = `https://cdn.cloudflare.steamstatic.com${hero.img}`;
+    if (!guide || !content) {
+        console.error("Hero guide elements were not found.");
+        return;
+    }
+
+    const imageUrl = `${ITEM_IMAGE_BASE_URL}${hero.img}`;
     const guideData = await loadHeroGuide(hero.localized_name);
 
     if (!guideData) {
@@ -405,7 +427,6 @@ async function showHeroGuide(hero) {
     }
 
     const heroProfile = guideData.heroProfile || {};
-
     const commonItems = createCommonItems(guideData.commonItems);
 
     const gameplay = guideData.gameplay || {};
@@ -428,15 +449,30 @@ async function showHeroGuide(hero) {
             <h3>Hero Profile</h3>
         </div>
 
-        ${createPhaseSection("Laning Phase", heroProfile.laningPhase)}
+        ${createPhaseSection(
+            "Laning Phase",
+            heroProfile.laningPhase
+        )}
 
-        ${createPhaseSection("Early-Mid Game", heroProfile.preBKB)}
+        ${createPhaseSection(
+            "Early-Mid Game",
+            heroProfile.preBKB
+        )}
 
-        ${createPhaseSection("Late Game: Post-BKB", heroProfile.postBKB)}
+        ${createPhaseSection(
+            "Late Game: Post-BKB",
+            heroProfile.postBKB
+        )}
 
-        ${createGameplaySection("How to Play Alongside PA", playingAlongside)}
+        ${createGameplaySection(
+            "How to Play Alongside PA",
+            playingAlongside
+        )}
 
-        ${createGameplaySection("How to Play Against PA", playingAgainst)}
+        ${createGameplaySection(
+            "How to Play Against PA",
+            playingAgainst
+        )}
 
         ${createDraftSectionGroup(guideData)}
     `;
@@ -450,8 +486,10 @@ async function showHeroGuide(hero) {
    ========================= */
 
 async function start() {
-    await loadItemData();
-    await loadHeroes();
+    await Promise.all([
+        loadItemData(),
+        loadHeroes()
+    ]);
 }
 
 start();
