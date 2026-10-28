@@ -166,7 +166,6 @@ async function loadHeroes() {
         const heroes = await response.json();
 
         allHeroes = heroes;
-
         heroSelection.innerHTML = "";
 
         attributeOrder.forEach(attribute => {
@@ -266,22 +265,130 @@ function createPhaseSection(title, phaseData) {
 }
 
 /* =========================
+   GET HERO PROFILE PHASES
+
+   Supports:
+   - laningPhase / preBKB / postBKB
+   - laningPhase / preScepter / postScepter
+   ========================= */
+
+function getHeroProfilePhases(heroProfile) {
+    const phases = [
+        {
+            key: "laningPhase",
+            title: "Laning Phase"
+        }
+    ];
+
+    if (heroProfile.preScepter || heroProfile.postScepter) {
+        phases.push(
+            {
+                key: "preScepter",
+                title: "Early-Mid Game: Before Aghanim's Scepter"
+            },
+            {
+                key: "postScepter",
+                title: "Late Game: Post-Aghanim's Scepter"
+            }
+        );
+    } else {
+        phases.push(
+            {
+                key: "preBKB",
+                title: "Early-Mid Game: Before BKB"
+            },
+            {
+                key: "postBKB",
+                title: "Late Game: Post-BKB"
+            }
+        );
+    }
+
+    return phases;
+}
+
+/* =========================
+   CREATE HERO PROFILE
+   ========================= */
+
+function createHeroProfileSection(heroProfile) {
+    if (!heroProfile) return "";
+
+    const phases = getHeroProfilePhases(heroProfile);
+
+    return `
+        <div class="guide-section">
+            <h3>Hero Profile</h3>
+        </div>
+
+        ${phases.map(phase =>
+            createPhaseSection(
+                phase.title,
+                heroProfile[phase.key]
+            )
+        ).join("")}
+    `;
+}
+
+/* =========================
+   GET GAMEPLAY PHASES
+
+   Supports:
+   - general / laningPhase / preBKB / postBKB
+   - general / laningPhase / preScepter / postScepter
+   ========================= */
+
+function getGameplayPhases(gameplayData) {
+    const phases = [
+        {
+            key: "general",
+            title: "General Tips"
+        },
+        {
+            key: "laningPhase",
+            title: "Laning Phase"
+        }
+    ];
+
+    if (gameplayData.preScepter || gameplayData.postScepter) {
+        phases.push(
+            {
+                key: "preScepter",
+                title: "Early-Mid Game: Before Aghanim's Scepter"
+            },
+            {
+                key: "postScepter",
+                title: "Late Game: Post-Aghanim's Scepter"
+            }
+        );
+    } else {
+        phases.push(
+            {
+                key: "preBKB",
+                title: "Early-Mid Game: Before BKB"
+            },
+            {
+                key: "postBKB",
+                title: "Late Game: Post-BKB"
+            }
+        );
+    }
+
+    return phases;
+}
+
+/* =========================
    CREATE GAMEPLAY SECTION
    ========================= */
 
 function createGameplaySection(title, gameplayData) {
     if (!gameplayData) return "";
 
+    const phases = getGameplayPhases(gameplayData);
+
     let sections = "";
 
-    const gameplayPhases = [
-        { key: "general", title: "General Tips" },
-        { key: "laningPhase", title: "Laning Phase" },
-        { key: "preBKB", title: "Early-Mid Game (Before BKB)" },
-        { key: "postBKB", title: "Late Game (Post-BKB)" }
-    ];
-
-    gameplayPhases.forEach(phase => {
+    phases.forEach(phase => {
         const items = gameplayData[phase.key];
 
         if (Array.isArray(items) && items.length > 0) {
@@ -445,32 +552,15 @@ async function showHeroGuide(hero) {
             </div>
         </div>
 
-        <div class="guide-section">
-            <h3>Hero Profile</h3>
-        </div>
-
-        ${createPhaseSection(
-            "Laning Phase",
-            heroProfile.laningPhase
-        )}
-
-        ${createPhaseSection(
-            "Early-Mid Game",
-            heroProfile.preBKB
-        )}
-
-        ${createPhaseSection(
-            "Late Game: Post-BKB",
-            heroProfile.postBKB
-        )}
+        ${createHeroProfileSection(heroProfile)}
 
         ${createGameplaySection(
-            "How to Play Alongside PA",
+            `How to Play Alongside ${hero.localized_name}`,
             playingAlongside
         )}
 
         ${createGameplaySection(
-            "How to Play Against PA",
+            `How to Play Against ${hero.localized_name}`,
             playingAgainst
         )}
 
