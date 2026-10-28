@@ -272,41 +272,28 @@ function createPhaseSection(title, phaseData) {
    - laningPhase / preScepter / postScepter
    ========================= */
 
-function getHeroProfilePhases(heroProfile) {
-    const phases = [
-        {
-            key: "laningPhase",
-            title: "Laning Phase"
-        }
-    ];
-
-    if (heroProfile.preScepter || heroProfile.postScepter) {
-        phases.push(
-            {
-                key: "preScepter",
-                title: "Early-Mid Game: Before Aghanim's Scepter"
-            },
-            {
-                key: "postScepter",
-                title: "Late Game: Post-Aghanim's Scepter"
-            }
-        );
-    } else {
-        phases.push(
-            {
-                key: "preBKB",
-                title: "Early-Mid Game: Before BKB"
-            },
-            {
-                key: "postBKB",
-                title: "Late Game: Post-BKB"
-            }
-        );
+"heroProfile": {
+  "phases": [
+    {
+      "title": "Laning Phase",
+      "description": "Phase description.",
+      "strengths": [],
+      "weaknesses": []
+    },
+    {
+      "title": "Before Aghanim's Scepter",
+      "description": "Phase description.",
+      "strengths": [],
+      "weaknesses": []
+    },
+    {
+      "title": "After Aghanim's Scepter",
+      "description": "Phase description.",
+      "strengths": [],
+      "weaknesses": []
     }
-
-    return phases;
+  ]
 }
-
 /* =========================
    CREATE HERO PROFILE
    ========================= */
