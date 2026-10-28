@@ -1,0 +1,47 @@
+
+{
+  "heroProfile": {
+    "laningPhase": {
+      "description": "The laning phase is approximately the first 6 levels and around the first 7 minutes. These are rough guidelines rather than fixed time limits. The phase ends whenever PL can no longer play safely in lane, or when he chooses to leave the lane. PL generally prefers to farm on the safelane side of the map, as he cannot clear some Ancient camps that easily. PL is not a powerful laner and prefers to trade farm in lane rather than actively seek kills.",
+      "strengths": [
+        "Can secure ranged creeps safely with Spirit Lance.",
+        "Has access to a dispel and dodge mechanic through Doppelganger, making some spells ineffective against him.",
+        "Can help his support during trades similarly to a ranged hero.",
+        "Has a longer attack range than most melee heroes (225 vs. 125)."
+      ],
+      "weaknesses": [
+        "Low base HP.",
+        "Relatively weak throughout the laning phase, especially right before level 6.",
+        "When his HP is low, his newly created illusions also have low HP, making them easier to deal with."
+      ]
+    },
+    "preBKB": {
+      "description": "This phase begins after the laning phase and lasts until PL obtains Manta Style and Aghanim's Scepter. PL's strength during this phase depends heavily on the matchups. He is very powerful against single-target units at this stage and very weak against heroes with AoE damage. Overall, this is not the stage at which PL wants to fight the enemy team. He prefers to maximize his farm and avoid prolonged engagements with the enemy.",
+      "strengths": [
+        "Can push lanes safely with illusions.",
+        "Can force enemy heroes who lack strong AoE damage out of his side of the map while farming.",
+        "Using both Manta Style and Doppelganger makes him very difficult to pin down when being ganked."
+      ],
+      "weaknesses": [
+        "Relies on neutral items for regeneration, and once he loses HP, he has a very hard time recovering it.",
+        "Has low damage and CC (Crowd Control) at this stage, making it easy for enemies to escape from him.",
+        "Cannot farm Ancient stacks.",
+        "Unless he is significantly ahead, he cannot contribute much to team objectives. He lacks the damage needed to kill Roshan efficiently, cannot tank Tormentor, is poor at pushing towers, and is also ineffective at defending them."
+      ]
+    },
+    "postBKB": {
+      "description": "PL's farming speed skyrockets after obtaining Aghanim's Scepter, allowing him to clear waves and camps very quickly. However, he still lacks survivability and CC until he obtains one or two additional items after Aghanim's Scepter. Once he completes two or three items after Aghanim's Scepter, he becomes one of the strongest heroes in the game.",
+      "strengths": [
+        "It is difficult to identify the real PL among his illusions, making single-target heroes less effective against him.",
+        "Can burst heroes very quickly, especially with Bloodthorn against heroes that do not have a dispel.",
+        "While being effective at bursting heroes, he also performs well in prolonged fights, as he usually buys Heart of Tarrasque.",
+        "Gains access to cheap invisibility through Aghanim's Shard, adding another layer to his survivability."
+      ],
+      "weaknesses": [
+        "Does not buy bonus armor, making heroes with armor-ignoring abilities, such as Drow Ranger (DR) and Elder Titan (ET), very effective against him.",
+        "PL generally avoids buying bonus damage because it does not benefit his illusions. As a result, he does not usually buy Nullifier, making Ghost Scepter and Glimmer Cape very effective against him. He can buy Disperser, but usually only as a last item.",
+        "Single-target buffs, such as BKB or Solar Crest, are not as effective for him because they can reveal his identity to the enemy, putting him at greater risk."
+      ]
+    }
+  }
+}
