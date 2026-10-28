@@ -1,6 +1,5 @@
-from pathlib import Path
 
-script = r'''const attributeOrder = ["str", "agi", "int", "all"];
+const attributeOrder = ["str", "agi", "int", "all"];
 
 const attributeNames = {
     str: "Strength",
@@ -15,10 +14,6 @@ const ITEM_IMAGE_BASE_URL = "https://cdn.cloudflare.steamstatic.com";
 let itemData = new Map();
 let allHeroes = [];
 
-/* =========================
-   GENERAL HELPERS
-   ========================= */
-
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, character => ({
         "&": "&amp;",
@@ -32,8 +27,7 @@ function escapeHTML(value) {
 function normalizeItemName(name) {
     if (!name) return "";
 
-    return name
-        .toString()
+    return name.toString()
         .toLowerCase()
         .replaceAll("’", "'")
         .replaceAll("&", "and")
@@ -64,33 +58,18 @@ function formatKeyAsTitle(key) {
         .replace(/\b\w/g, character => character.toUpperCase());
 }
 
-/* =========================
-   ITEM DATA
-   ========================= */
-
 async function loadItemData() {
     try {
         const response = await fetch(ITEM_LIST_URL);
-
-        if (!response.ok) {
-            throw new Error(`Item list request failed: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Item request failed: ${response.status}`);
 
         const data = await response.json();
 
         Object.entries(data).forEach(([itemKey, item]) => {
             if (!item) return;
-
-            if (item.dname) {
-                itemData.set(normalizeItemName(item.dname), item);
-            }
-
-            if (itemKey) {
-                itemData.set(normalizeItemName(itemKey), item);
-            }
+            if (item.dname) itemData.set(normalizeItemName(item.dname), item);
+            if (itemKey) itemData.set(normalizeItemName(itemKey), item);
         });
-
-        console.log(`Loaded ${itemData.size} Dota item references.`);
     } catch (error) {
         console.error("Could not load item data:", error);
     }
@@ -106,38 +85,23 @@ function createCommonItems(items) {
 
     const itemElements = items.map(itemName => {
         const item = findItem(itemName);
+        if (!item || !item.img) return "";
 
-        if (!item || !item.img) {
-            console.warn(`Could not find Dota item image: ${itemName}`);
-            return "";
-        }
-
-        const itemTitle = item.dname || itemName;
-        const imageUrl = `${ITEM_IMAGE_BASE_URL}${item.img}`;
-
+        const title = item.dname || itemName;
         return `
-            <img
-                class="common-item-image"
-                src="${imageUrl}"
-                alt="${escapeHTML(itemTitle)}"
-                title="${escapeHTML(itemTitle)}"
-                loading="lazy"
-            >
+            <img class="common-item-image"
+                 src="${ITEM_IMAGE_BASE_URL}${item.img}"
+                 alt="${escapeHTML(title)}"
+                 title="${escapeHTML(title)}"
+                 loading="lazy">
         `;
     }).filter(Boolean).join("");
 
-    if (!itemElements) return "";
-
-    return `<div class="common-items">${itemElements}</div>`;
+    return itemElements ? `<div class="common-items">${itemElements}</div>` : "";
 }
 
-/* =========================
-   HERO GUIDE FILES
-   ========================= */
-
 function getHeroFileName(heroName) {
-    return heroName
-        .toLowerCase()
+    return heroName.toLowerCase()
         .replaceAll("'", "")
         .replaceAll(" ", "-");
 }
@@ -155,10 +119,6 @@ async function loadHeroGuide(heroName) {
     }
 }
 
-/* =========================
-   LOAD HEROES
-   ========================= */
-
 async function loadHeroes() {
     const heroSelection = document.getElementById("hero-selection");
 
@@ -169,22 +129,17 @@ async function loadHeroes() {
 
     try {
         const response = await fetch("https://api.opendota.com/api/heroStats");
-
-        if (!response.ok) {
-            throw new Error(`Hero list request failed: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Hero request failed: ${response.status}`);
 
         allHeroes = await response.json();
         heroSelection.innerHTML = "";
 
         attributeOrder.forEach(attribute => {
-            const attributeHeroes = allHeroes
+            const heroes = allHeroes
                 .filter(hero => hero.primary_attr === attribute)
-                .sort((a, b) =>
-                    a.localized_name.localeCompare(b.localized_name)
-                );
+                .sort((a, b) => a.localized_name.localeCompare(b.localized_name));
 
-            if (attributeHeroes.length === 0) return;
+            if (!heroes.length) return;
 
             const section = document.createElement("section");
             section.className = "attribute-section";
@@ -196,17 +151,15 @@ async function loadHeroes() {
             const grid = document.createElement("div");
             grid.className = "hero-grid";
 
-            attributeHeroes.forEach(hero => {
+            heroes.forEach(hero => {
                 const card = document.createElement("div");
                 card.className = "hero-card";
 
                 card.innerHTML = `
-                    <img
-                        class="hero-image"
-                        src="${ITEM_IMAGE_BASE_URL}${hero.img}"
-                        alt="${escapeHTML(hero.localized_name)}"
-                        loading="lazy"
-                    >
+                    <img class="hero-image"
+                         src="${ITEM_IMAGE_BASE_URL}${hero.img}"
+                         alt="${escapeHTML(hero.localized_name)}"
+                         loading="lazy">
                     <div class="hero-name">${escapeHTML(hero.localized_name)}</div>
                 `;
 
@@ -223,40 +176,10 @@ async function loadHeroes() {
     }
 }
 
-/* =========================
-   BULLET LIST
-   ========================= */
-
 function createBulletList(items) {
-    if (!Array.isArray(items) || items.length === 0) return "";
-
-    return items
-        .map(item => `<li>${escapeHTML(item)}</li>`)
-        .join("");
+    if (!Array.isArray(items) || !items.length) return "";
+    return items.map(item => `<li>${escapeHTML(item)}</li>`).join("");
 }
-
-/* =========================
-   HERO PROFILE PHASES
-
-   Preferred format:
-   heroProfile: {
-     phases: [
-       {
-         title: "Any title you want",
-         description: "...",
-         strengths: [],
-         weaknesses: []
-       }
-     ]
-   }
-
-   Legacy format is also supported:
-   heroProfile: {
-     laningPhase: {...},
-     preBKB: {...},
-     postBKB: {...}
-   }
-   ========================= */
 
 function getHeroProfilePhases(heroProfile) {
     if (Array.isArray(heroProfile.phases)) {
@@ -268,14 +191,9 @@ function getHeroProfilePhases(heroProfile) {
             }));
     }
 
-    // Backward compatibility for existing guide files.
-    const reservedKeys = new Set(["phases"]);
     return Object.entries(heroProfile)
-        .filter(([key, value]) =>
-            !reservedKeys.has(key) &&
-            value &&
-            typeof value === "object" &&
-            !Array.isArray(value)
+        .filter(([, value]) =>
+            value && typeof value === "object" && !Array.isArray(value)
         )
         .map(([key, value]) => ({
             ...value,
@@ -288,13 +206,8 @@ function createPhaseSection(phaseData) {
 
     const title = phaseData.title || "Untitled Phase";
     const description = phaseData.description || "";
-    const strengths = Array.isArray(phaseData.strengths)
-        ? phaseData.strengths
-        : [];
-    const weaknesses = Array.isArray(phaseData.weaknesses)
-        ? phaseData.weaknesses
-        : [];
-
+    const strengths = Array.isArray(phaseData.strengths) ? phaseData.strengths : [];
+    const weaknesses = Array.isArray(phaseData.weaknesses) ? phaseData.weaknesses : [];
     const hasProsCons = strengths.length > 0 || weaknesses.length > 0;
 
     return `
@@ -321,32 +234,13 @@ function createHeroProfileSection(heroProfile) {
     if (!heroProfile || typeof heroProfile !== "object") return "";
 
     const phases = getHeroProfilePhases(heroProfile);
-    if (phases.length === 0) return "";
+    if (!phases.length) return "";
 
     return `
-        <div class="guide-section">
-            <h3>Hero Profile</h3>
-        </div>
+        <div class="guide-section"><h3>Hero Profile</h3></div>
         ${phases.map(createPhaseSection).join("")}
     `;
 }
-
-/* =========================
-   GAMEPLAY PHASES
-
-   Preferred format:
-   playingAlongside: {
-     phases: [
-       { title: "Any title", tips: ["..."] }
-     ]
-   }
-
-   "items" can be used instead of "tips".
-   Legacy format is also supported:
-   general: [], laningPhase: [], preBKB: [], etc.
-   Any array-valued key is displayed, with its key converted
-   to a readable title unless an explicit title is provided.
-   ========================= */
 
 function getGameplayPhases(gameplayData) {
     if (Array.isArray(gameplayData.phases)) {
@@ -354,17 +248,13 @@ function getGameplayPhases(gameplayData) {
             .filter(phase => phase && typeof phase === "object")
             .map((phase, index) => ({
                 title: phase.title || `Phase ${index + 1}`,
-                tips: Array.isArray(phase.tips)
-                    ? phase.tips
-                    : Array.isArray(phase.items)
-                        ? phase.items
-                        : Array.isArray(phase.guidelines)
-                            ? phase.guidelines
-                            : []
+                tips: Array.isArray(phase.tips) ? phase.tips
+                    : Array.isArray(phase.items) ? phase.items
+                    : Array.isArray(phase.guidelines) ? phase.guidelines
+                    : []
             }));
     }
 
-    // Backward compatibility: every array-valued property is a section.
     return Object.entries(gameplayData)
         .filter(([, value]) => Array.isArray(value))
         .map(([key, value]) => ({
@@ -376,17 +266,14 @@ function getGameplayPhases(gameplayData) {
 function createGameplaySection(title, gameplayData) {
     if (!gameplayData || typeof gameplayData !== "object") return "";
 
-    const phases = getGameplayPhases(gameplayData);
-
-    const sections = phases
+    const sections = getGameplayPhases(gameplayData)
         .filter(phase => phase.tips.length > 0)
         .map(phase => `
             <div class="gameplay-subsection">
                 <h4>${escapeHTML(phase.title)}</h4>
                 <ul>${createBulletList(phase.tips)}</ul>
             </div>
-        `)
-        .join("");
+        `).join("");
 
     if (!sections) return "";
 
@@ -398,12 +285,8 @@ function createGameplaySection(title, gameplayData) {
     `;
 }
 
-/* =========================
-   DRAFT HERO IMAGES
-   ========================= */
-
 function createDraftHeroImages(heroNames) {
-    if (!Array.isArray(heroNames) || heroNames.length === 0) {
+    if (!Array.isArray(heroNames) || !heroNames.length) {
         return '<p class="draft-empty">Hero images will be added here.</p>';
     }
 
@@ -412,48 +295,30 @@ function createDraftHeroImages(heroNames) {
             item.localized_name.toLowerCase() === String(name).toLowerCase()
         );
 
-        if (!hero) {
-            console.warn(`Could not find draft hero: ${name}`);
-            return "";
-        }
+        if (!hero) return "";
 
         return `
-            <img
-                class="draft-hero-image"
-                src="${ITEM_IMAGE_BASE_URL}${hero.img}"
-                alt="${escapeHTML(hero.localized_name)}"
-                title="${escapeHTML(hero.localized_name)}"
-                loading="lazy"
-            >
+            <img class="draft-hero-image"
+                 src="${ITEM_IMAGE_BASE_URL}${hero.img}"
+                 alt="${escapeHTML(hero.localized_name)}"
+                 title="${escapeHTML(hero.localized_name)}"
+                 loading="lazy">
         `;
     }).filter(Boolean).join("");
 
-    return images ||
-        '<p class="draft-empty">No matching hero images found.</p>';
+    return images || '<p class="draft-empty">No matching hero images found.</p>';
 }
-
-/* =========================
-   DRAFT CARDS
-   ========================= */
 
 function createDraftCard(title, key, draft) {
     const cardData = draft[key] || {};
-
-    const guidelines = Array.isArray(cardData.guidelines)
-        ? cardData.guidelines
-        : [];
-
-    const heroNames = Array.isArray(cardData.heroes)
-        ? cardData.heroes
-        : [];
+    const guidelines = Array.isArray(cardData.guidelines) ? cardData.guidelines : [];
+    const heroNames = Array.isArray(cardData.heroes) ? cardData.heroes : [];
 
     return `
         <div class="draft-card">
             <h4>${escapeHTML(title)}</h4>
             <ul class="draft-guidelines">${createBulletList(guidelines)}</ul>
-            <div class="draft-hero-grid">
-                ${createDraftHeroImages(heroNames)}
-            </div>
+            <div class="draft-hero-grid">${createDraftHeroImages(heroNames)}</div>
         </div>
     `;
 }
@@ -473,10 +338,6 @@ function createDraftSectionGroup(guideData) {
         </div>
     `;
 }
-
-/* =========================
-   SHOW HERO GUIDE
-   ========================= */
 
 async function showHeroGuide(hero) {
     const guide = document.getElementById("hero-guide");
@@ -498,7 +359,6 @@ async function showHeroGuide(hero) {
             </div>
             <p>Guide not available yet.</p>
         `;
-
         guide.style.display = "block";
         guide.scrollIntoView({ behavior: "smooth" });
         return;
@@ -507,9 +367,6 @@ async function showHeroGuide(hero) {
     const heroProfile = guideData.heroProfile || {};
     const commonItems = createCommonItems(guideData.commonItems);
     const gameplay = guideData.gameplay || {};
-
-    const playingAlongside = gameplay.playingAlongside || {};
-    const playingAgainst = gameplay.playingAgainst || {};
 
     content.innerHTML = `
         <div class="guide-header">
@@ -526,12 +383,12 @@ async function showHeroGuide(hero) {
 
         ${createGameplaySection(
             `How to Play Alongside ${hero.localized_name}`,
-            playingAlongside
+            gameplay.playingAlongside || {}
         )}
 
         ${createGameplaySection(
             `How to Play Against ${hero.localized_name}`,
-            playingAgainst
+            gameplay.playingAgainst || {}
         )}
 
         ${createDraftSectionGroup(guideData)}
@@ -541,10 +398,6 @@ async function showHeroGuide(hero) {
     guide.scrollIntoView({ behavior: "smooth" });
 }
 
-/* =========================
-   START
-   ========================= */
-
 async function start() {
     await Promise.all([
         loadItemData(),
@@ -553,7 +406,3 @@ async function start() {
 }
 
 start();
-'''
-path = Path("/mnt/data/script.js")
-path.write_text(script, encoding="utf-8")
-print(f"Created {path} ({len(script.splitlines())} lines).")
