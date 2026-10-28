@@ -1,5 +1,6 @@
+from pathlib import Path
 
-const attributeOrder = ["str", "agi", "int", "all"];
+script = r'''const attributeOrder = ["str", "agi", "int", "all"];
 
 const attributeNames = {
     str: "Strength",
@@ -8,10 +9,6 @@ const attributeNames = {
     all: "Universal"
 };
 
-/* =========================
-   ITEM DATA
-   ========================= */
-
 const ITEM_LIST_URL = "https://api.opendota.com/api/constants/items";
 const ITEM_IMAGE_BASE_URL = "https://cdn.cloudflare.steamstatic.com";
 
@@ -19,8 +16,18 @@ let itemData = new Map();
 let allHeroes = [];
 
 /* =========================
-   NORMALIZE ITEM NAME
+   GENERAL HELPERS
    ========================= */
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
 
 function normalizeItemName(name) {
     if (!name) return "";
@@ -35,8 +42,30 @@ function normalizeItemName(name) {
         .trim();
 }
 
+function formatKeyAsTitle(key) {
+    if (!key) return "";
+
+    const knownLabels = {
+        general: "General Tips",
+        laningPhase: "Laning Phase",
+        preBKB: "Early-Mid Game (Before BKB)",
+        postBKB: "Late Game (Post-BKB)",
+        preScepter: "Before Aghanim's Scepter",
+        postScepter: "After Aghanim's Scepter"
+    };
+
+    if (knownLabels[key]) return knownLabels[key];
+
+    return String(key)
+        .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+        .replace(/[_-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, character => character.toUpperCase());
+}
+
 /* =========================
-   LOAD ITEM DATA
+   ITEM DATA
    ========================= */
 
 async function loadItemData() {
@@ -67,24 +96,13 @@ async function loadItemData() {
     }
 }
 
-/* =========================
-   FIND ITEM
-   ========================= */
-
 function findItem(itemName) {
     if (!itemName) return null;
-
     return itemData.get(normalizeItemName(itemName)) || null;
 }
 
-/* =========================
-   CREATE COMMON ITEMS
-   ========================= */
-
 function createCommonItems(items) {
-    if (!Array.isArray(items) || items.length === 0) {
-        return "";
-    }
+    if (!Array.isArray(items) || items.length === 0) return "";
 
     const itemElements = items.map(itemName => {
         const item = findItem(itemName);
@@ -94,14 +112,15 @@ function createCommonItems(items) {
             return "";
         }
 
+        const itemTitle = item.dname || itemName;
         const imageUrl = `${ITEM_IMAGE_BASE_URL}${item.img}`;
 
         return `
             <img
                 class="common-item-image"
                 src="${imageUrl}"
-                alt="${item.dname || itemName}"
-                title="${item.dname || itemName}"
+                alt="${escapeHTML(itemTitle)}"
+                title="${escapeHTML(itemTitle)}"
                 loading="lazy"
             >
         `;
@@ -109,11 +128,7 @@ function createCommonItems(items) {
 
     if (!itemElements) return "";
 
-    return `
-        <div class="common-items">
-            ${itemElements}
-        </div>
-    `;
+    return `<div class="common-items">${itemElements}</div>`;
 }
 
 /* =========================
@@ -132,9 +147,7 @@ async function loadHeroGuide(heroName) {
 
     try {
         const response = await fetch(`guides/${fileName}.json`);
-
         if (!response.ok) return null;
-
         return await response.json();
     } catch (error) {
         console.error(`Could not load guide for ${heroName}:`, error);
@@ -155,21 +168,17 @@ async function loadHeroes() {
     }
 
     try {
-        const response = await fetch(
-            "https://api.opendota.com/api/heroStats"
-        );
+        const response = await fetch("https://api.opendota.com/api/heroStats");
 
         if (!response.ok) {
             throw new Error(`Hero list request failed: ${response.status}`);
         }
 
-        const heroes = await response.json();
-
-        allHeroes = heroes;
+        allHeroes = await response.json();
         heroSelection.innerHTML = "";
 
         attributeOrder.forEach(attribute => {
-            const attributeHeroes = heroes
+            const attributeHeroes = allHeroes
                 .filter(hero => hero.primary_attr === attribute)
                 .sort((a, b) =>
                     a.localized_name.localeCompare(b.localized_name)
@@ -195,16 +204,13 @@ async function loadHeroes() {
                     <img
                         class="hero-image"
                         src="${ITEM_IMAGE_BASE_URL}${hero.img}"
-                        alt="${hero.localized_name}"
+                        alt="${escapeHTML(hero.localized_name)}"
                         loading="lazy"
                     >
-                    <div class="hero-name">${hero.localized_name}</div>
+                    <div class="hero-name">${escapeHTML(hero.localized_name)}</div>
                 `;
 
-                card.addEventListener("click", () => {
-                    showHeroGuide(hero);
-                });
-
+                card.addEventListener("click", () => showHeroGuide(hero));
                 grid.appendChild(card);
             });
 
@@ -218,188 +224,182 @@ async function loadHeroes() {
 }
 
 /* =========================
-   CREATE BULLET LIST
+   BULLET LIST
    ========================= */
 
 function createBulletList(items) {
-    if (!Array.isArray(items) || items.length === 0) {
-        return "";
-    }
+    if (!Array.isArray(items) || items.length === 0) return "";
 
     return items
-        .map(item => `<li>${item}</li>`)
+        .map(item => `<li>${escapeHTML(item)}</li>`)
         .join("");
 }
 
 /* =========================
-   CREATE HERO PROFILE PHASE
+   HERO PROFILE PHASES
+
+   Preferred format:
+   heroProfile: {
+     phases: [
+       {
+         title: "Any title you want",
+         description: "...",
+         strengths: [],
+         weaknesses: []
+       }
+     ]
+   }
+
+   Legacy format is also supported:
+   heroProfile: {
+     laningPhase: {...},
+     preBKB: {...},
+     postBKB: {...}
+   }
    ========================= */
 
-function createPhaseSection(title, phaseData) {
+function getHeroProfilePhases(heroProfile) {
+    if (Array.isArray(heroProfile.phases)) {
+        return heroProfile.phases
+            .filter(phase => phase && typeof phase === "object")
+            .map((phase, index) => ({
+                ...phase,
+                title: phase.title || `Phase ${index + 1}`
+            }));
+    }
+
+    // Backward compatibility for existing guide files.
+    const reservedKeys = new Set(["phases"]);
+    return Object.entries(heroProfile)
+        .filter(([key, value]) =>
+            !reservedKeys.has(key) &&
+            value &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+        )
+        .map(([key, value]) => ({
+            ...value,
+            title: value.title || formatKeyAsTitle(key)
+        }));
+}
+
+function createPhaseSection(phaseData) {
     if (!phaseData) return "";
 
-    const strengths = phaseData.strengths || [];
-    const weaknesses = phaseData.weaknesses || [];
+    const title = phaseData.title || "Untitled Phase";
+    const description = phaseData.description || "";
+    const strengths = Array.isArray(phaseData.strengths)
+        ? phaseData.strengths
+        : [];
+    const weaknesses = Array.isArray(phaseData.weaknesses)
+        ? phaseData.weaknesses
+        : [];
+
+    const hasProsCons = strengths.length > 0 || weaknesses.length > 0;
 
     return `
         <div class="guide-section">
-            <h3>${title}</h3>
-
-            ${phaseData.description
-                ? `<p>${phaseData.description}</p>`
-                : ""}
-
-            <div class="pros-cons">
-                <div class="pros-cons-column">
-                    <h4>Strengths &amp; Mechanics</h4>
-                    <ul>${createBulletList(strengths)}</ul>
+            <h3>${escapeHTML(title)}</h3>
+            ${description ? `<p>${escapeHTML(description)}</p>` : ""}
+            ${hasProsCons ? `
+                <div class="pros-cons">
+                    <div class="pros-cons-column">
+                        <h4>Strengths &amp; Mechanics</h4>
+                        <ul>${createBulletList(strengths)}</ul>
+                    </div>
+                    <div class="pros-cons-column">
+                        <h4>Weaknesses &amp; Limitations</h4>
+                        <ul>${createBulletList(weaknesses)}</ul>
+                    </div>
                 </div>
-
-                <div class="pros-cons-column">
-                    <h4>Weaknesses &amp; Limitations</h4>
-                    <ul>${createBulletList(weaknesses)}</ul>
-                </div>
-            </div>
+            ` : ""}
         </div>
     `;
 }
 
-/* =========================
-   GET HERO PROFILE PHASES
-
-   Supports:
-   - laningPhase / preBKB / postBKB
-   - laningPhase / preScepter / postScepter
-   ========================= */
-
-"heroProfile": {
-  "phases": [
-    {
-      "title": "Laning Phase",
-      "description": "Phase description.",
-      "strengths": [],
-      "weaknesses": []
-    },
-    {
-      "title": "Before Aghanim's Scepter",
-      "description": "Phase description.",
-      "strengths": [],
-      "weaknesses": []
-    },
-    {
-      "title": "After Aghanim's Scepter",
-      "description": "Phase description.",
-      "strengths": [],
-      "weaknesses": []
-    }
-  ]
-}
-/* =========================
-   CREATE HERO PROFILE
-   ========================= */
-
 function createHeroProfileSection(heroProfile) {
-    if (!heroProfile) return "";
+    if (!heroProfile || typeof heroProfile !== "object") return "";
 
     const phases = getHeroProfilePhases(heroProfile);
+    if (phases.length === 0) return "";
 
     return `
         <div class="guide-section">
             <h3>Hero Profile</h3>
         </div>
-
-        ${phases.map(phase =>
-            createPhaseSection(
-                phase.title,
-                heroProfile[phase.key]
-            )
-        ).join("")}
+        ${phases.map(createPhaseSection).join("")}
     `;
 }
 
 /* =========================
-   GET GAMEPLAY PHASES
+   GAMEPLAY PHASES
 
-   Supports:
-   - general / laningPhase / preBKB / postBKB
-   - general / laningPhase / preScepter / postScepter
+   Preferred format:
+   playingAlongside: {
+     phases: [
+       { title: "Any title", tips: ["..."] }
+     ]
+   }
+
+   "items" can be used instead of "tips".
+   Legacy format is also supported:
+   general: [], laningPhase: [], preBKB: [], etc.
+   Any array-valued key is displayed, with its key converted
+   to a readable title unless an explicit title is provided.
    ========================= */
 
 function getGameplayPhases(gameplayData) {
-    const phases = [
-        {
-            key: "general",
-            title: "General Tips"
-        },
-        {
-            key: "laningPhase",
-            title: "Laning Phase"
-        }
-    ];
-
-    if (gameplayData.preScepter || gameplayData.postScepter) {
-        phases.push(
-            {
-                key: "preScepter",
-                title: "Early-Mid Game: Before Aghanim's Scepter"
-            },
-            {
-                key: "postScepter",
-                title: "Late Game: Post-Aghanim's Scepter"
-            }
-        );
-    } else {
-        phases.push(
-            {
-                key: "preBKB",
-                title: "Early-Mid Game: Before BKB"
-            },
-            {
-                key: "postBKB",
-                title: "Late Game: Post-BKB"
-            }
-        );
+    if (Array.isArray(gameplayData.phases)) {
+        return gameplayData.phases
+            .filter(phase => phase && typeof phase === "object")
+            .map((phase, index) => ({
+                title: phase.title || `Phase ${index + 1}`,
+                tips: Array.isArray(phase.tips)
+                    ? phase.tips
+                    : Array.isArray(phase.items)
+                        ? phase.items
+                        : Array.isArray(phase.guidelines)
+                            ? phase.guidelines
+                            : []
+            }));
     }
 
-    return phases;
+    // Backward compatibility: every array-valued property is a section.
+    return Object.entries(gameplayData)
+        .filter(([, value]) => Array.isArray(value))
+        .map(([key, value]) => ({
+            title: formatKeyAsTitle(key),
+            tips: value
+        }));
 }
 
-/* =========================
-   CREATE GAMEPLAY SECTION
-   ========================= */
-
 function createGameplaySection(title, gameplayData) {
-    if (!gameplayData) return "";
+    if (!gameplayData || typeof gameplayData !== "object") return "";
 
     const phases = getGameplayPhases(gameplayData);
 
-    let sections = "";
-
-    phases.forEach(phase => {
-        const items = gameplayData[phase.key];
-
-        if (Array.isArray(items) && items.length > 0) {
-            sections += `
-                <div class="gameplay-subsection">
-                    <h4>${phase.title}</h4>
-                    <ul>${createBulletList(items)}</ul>
-                </div>
-            `;
-        }
-    });
+    const sections = phases
+        .filter(phase => phase.tips.length > 0)
+        .map(phase => `
+            <div class="gameplay-subsection">
+                <h4>${escapeHTML(phase.title)}</h4>
+                <ul>${createBulletList(phase.tips)}</ul>
+            </div>
+        `)
+        .join("");
 
     if (!sections) return "";
 
     return `
         <div class="guide-section">
-            <h3>${title}</h3>
+            <h3>${escapeHTML(title)}</h3>
             ${sections}
         </div>
     `;
 }
 
 /* =========================
-   CREATE DRAFT HERO IMAGES
+   DRAFT HERO IMAGES
    ========================= */
 
 function createDraftHeroImages(heroNames) {
@@ -409,7 +409,7 @@ function createDraftHeroImages(heroNames) {
 
     const images = heroNames.map(name => {
         const hero = allHeroes.find(item =>
-            item.localized_name.toLowerCase() === name.toLowerCase()
+            item.localized_name.toLowerCase() === String(name).toLowerCase()
         );
 
         if (!hero) {
@@ -421,8 +421,8 @@ function createDraftHeroImages(heroNames) {
             <img
                 class="draft-hero-image"
                 src="${ITEM_IMAGE_BASE_URL}${hero.img}"
-                alt="${hero.localized_name}"
-                title="${hero.localized_name}"
+                alt="${escapeHTML(hero.localized_name)}"
+                title="${escapeHTML(hero.localized_name)}"
                 loading="lazy"
             >
         `;
@@ -433,7 +433,7 @@ function createDraftHeroImages(heroNames) {
 }
 
 /* =========================
-   CREATE DRAFT CARD
+   DRAFT CARDS
    ========================= */
 
 function createDraftCard(title, key, draft) {
@@ -449,12 +449,8 @@ function createDraftCard(title, key, draft) {
 
     return `
         <div class="draft-card">
-            <h4>${title}</h4>
-
-            <ul class="draft-guidelines">
-                ${createBulletList(guidelines)}
-            </ul>
-
+            <h4>${escapeHTML(title)}</h4>
+            <ul class="draft-guidelines">${createBulletList(guidelines)}</ul>
             <div class="draft-hero-grid">
                 ${createDraftHeroImages(heroNames)}
             </div>
@@ -462,29 +458,17 @@ function createDraftCard(title, key, draft) {
     `;
 }
 
-/* =========================
-   CREATE DRAFT SECTION
-   ========================= */
-
 function createDraftSectionGroup(guideData) {
     const draft = guideData.draft || {};
 
     return `
         <div class="guide-section draft-section">
             <h3>Draft</h3>
-
             <div class="draft-layout">
                 ${createDraftCard("Pick Alongside", "pickAlongside", draft)}
-
                 ${createDraftCard("Avoid Alongside", "avoidAlongside", draft)}
-
                 ${createDraftCard("Pick Against", "pickAgainst", draft)}
-
-                ${createDraftCard(
-                    "Avoid Picking Against",
-                    "avoidPickingAgainst",
-                    draft
-                )}
+                ${createDraftCard("Avoid Picking Against", "avoidPickingAgainst", draft)}
             </div>
         </div>
     `;
@@ -509,8 +493,8 @@ async function showHeroGuide(hero) {
     if (!guideData) {
         content.innerHTML = `
             <div class="guide-header">
-                <img src="${imageUrl}" alt="${hero.localized_name}">
-                <h2>${hero.localized_name}</h2>
+                <img src="${imageUrl}" alt="${escapeHTML(hero.localized_name)}">
+                <h2>${escapeHTML(hero.localized_name)}</h2>
             </div>
             <p>Guide not available yet.</p>
         `;
@@ -522,18 +506,17 @@ async function showHeroGuide(hero) {
 
     const heroProfile = guideData.heroProfile || {};
     const commonItems = createCommonItems(guideData.commonItems);
-
     const gameplay = guideData.gameplay || {};
+
     const playingAlongside = gameplay.playingAlongside || {};
     const playingAgainst = gameplay.playingAgainst || {};
 
     content.innerHTML = `
         <div class="guide-header">
-            <img src="${imageUrl}" alt="${hero.localized_name}">
-
+            <img src="${imageUrl}" alt="${escapeHTML(hero.localized_name)}">
             <div class="guide-title-area">
                 <div class="guide-title-row">
-                    <h2>${hero.localized_name}</h2>
+                    <h2>${escapeHTML(hero.localized_name)}</h2>
                     ${commonItems}
                 </div>
             </div>
@@ -570,3 +553,7 @@ async function start() {
 }
 
 start();
+'''
+path = Path("/mnt/data/script.js")
+path.write_text(script, encoding="utf-8")
+print(f"Created {path} ({len(script.splitlines())} lines).")
