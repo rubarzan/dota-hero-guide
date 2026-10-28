@@ -15,7 +15,7 @@
         "When his HP is low, his newly created illusions also have low HP, making them easier to deal with."
       ]
     },
-    "preBKB": {
+    "preScepter": {
       "description": "This phase begins after the laning phase and lasts until PL obtains Manta Style and Aghanim's Scepter. PL's strength during this phase depends heavily on the matchups. He is very powerful against single-target units at this stage and very weak against heroes with AoE damage. Overall, this is not the stage at which PL wants to fight the enemy team. He prefers to maximize his farm and avoid prolonged engagements with the enemy.",
       "strengths": [
         "Can push lanes safely with illusions.",
@@ -29,7 +29,7 @@
         "Unless he is significantly ahead, he cannot contribute much to team objectives. He lacks the damage needed to kill Roshan efficiently, cannot tank Tormentor, is poor at pushing towers, and is also ineffective at defending them."
       ]
     },
-    "postBKB": {
+    "postScepter": {
       "description": "PL's farming speed skyrockets after obtaining Aghanim's Scepter, allowing him to clear waves and camps very quickly. However, he still lacks survivability and CC until he obtains one or two additional items after Aghanim's Scepter. Once he completes two or three items after Aghanim's Scepter, he becomes one of the strongest heroes in the game.",
       "strengths": [
         "It is difficult to identify the real PL among his illusions, making single-target heroes less effective against him.",
@@ -41,6 +41,36 @@
         "Does not buy bonus armor, making heroes with armor-ignoring abilities, such as Drow Ranger (DR) and Elder Titan (ET), very effective against him.",
         "PL generally avoids buying bonus damage because it does not benefit his illusions. As a result, he does not usually buy Nullifier, making Ghost Scepter and Glimmer Cape very effective against him. He can buy Disperser, but usually only as a last item.",
         "Single-target buffs, such as BKB or Solar Crest, are not as effective for him because they can reveal his identity to the enemy, putting him at greater risk."
+      ]
+    }
+  },
+  "gameplay": {
+    "playingAlongside": {
+      "general": [
+        "PL likes to be fashionably late to teamfights rather than initiating them or getting initiated on. Providing vision, either with wards or by going in first, is very helpful to him.",
+        "PL thrives in long fights and often kites enemies, so prepare for prolonged engagements and avoid committing too heavily unless necessary."
+      ],
+      "laningPhase": [
+        "PL prefers to chill and focus on CSing in lane, so avoid playing aggressively and expecting him to fight alongside you.",
+        "Constantly pulling and separating the lane is one of the best ways to help PL during the laning phase.",
+        "You want to keep PL at nearly full HP, so attract as much enemy attention as possible. If your hero allows it, provide healing for PL as well. Buying a Headdress is recommended if it suits your hero.",
+        "PL is generally weak before level 6, and level 6 is a very important power spike for him, so give him solo experience as much as possible.",
+        "PL is usually strong in 1v1 situations. Therefore, try to rotate toward the offlane side of the map and attract as much enemy attention there as possible. PL can jungle if the enemies do not show up, and he is good at defending his tower by using illusions to delay enemy pushes on his own. Just provide vision so he can see enemies rotating toward him.",
+        "As a midlaner, it is usually more effective to gank away from PL, unless you can take the enemy tower for him. Taking the tower can be very effective because it reduces his interaction with the enemy. The less attention PL's lane gets, the better."
+      ],
+      "preScepter": [
+        "Provide defensive vision around the safelane side of the map so PL can farm alone and avoid getting ganked during this phase.",
+        "Keeping the mid Tier 1 tower alive is very effective, as it prevents the enemy from invading your jungle and ganking PL efficiently.",
+        "PL and all his illusions benefit from aura items, so purchasing them early can be very effective, especially Pipe of Insight.",
+        "It is fine to gank for PL with multiple heroes, as he can contribute with his illusions. However, avoid turning the gank into a prolonged fight because PL prefers to return to farming and cannot survive long fights well at this stage. Get a kill and leave.",
+        "If the enemy constantly commits four or five heroes to your safelane, you can swap sides with PL, allowing him to farm the empty side of the map while the rest of your team faces the enemy as a group of four. This is usually easier for your team to execute, so the enemy is making a mistake by doing this unless they have specific heroes suited for that strategy."
+      ],
+      "postScepter": [
+        "At this stage, PL needs one additional item before joining fights consistently. That item can be expensive, such as Eye of Skadi or Heart of Tarrasque, so expect him to take some time to complete it.",
+        "PL will not protect his backline, so if you play as a backliner, prioritize items that keep you alive and focus on your own survival.",
+        "Once PL has two more items after Aghanim's Scepter, he becomes the strongest hero on his team. Play with or behind him as much as possible. The outcome of a fight mainly depends on whether PL survives or dies.",
+        "Providing vision on the enemy's backline, especially their save heroes, can be very effective for PL.",
+        "PL constantly kites in and out of fights, so avoid committing too heavily unless necessary. Focus on keeping yourself and your team alive. The enemy has to use important spells and items just to deal with his illusions, so you can wait until they have used most of their key spells and items before committing to the fight."
       ]
     }
   }
